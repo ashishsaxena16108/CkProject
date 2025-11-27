@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 10px;
+}
+
+/* 2. Define the appearance of the track (background) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* 3. Define the appearance of the thumb (the moving handle) */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  width: 8px; /* Round the corners of the thumb */
+}
+
+/* 4. Change color on hover (optional) */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-track-piece{
+  background-color: transparent;
+}

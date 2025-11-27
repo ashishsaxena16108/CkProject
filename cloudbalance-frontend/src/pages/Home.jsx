@@ -1,0 +1,30 @@
+import React, { useState } from 'react'
+import Navbar from '../components/Navbar'
+import Dashboard from '../components/Dashboard'
+import SideBar from '../components/SideBar';
+import { Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { adminList,userList } from '../app/constant'
+
+const Home = () => {
+  const role  = useSelector((state) => state.auth.role);
+  const [open, setopen] = useState(true);
+  const handleBtn = ()=>{
+      setopen(!open);
+  }
+  return (
+    <div className='font-bold h-screen flex flex-col bg-gray-200 '>
+        <Navbar  handleBtn={handleBtn}/>
+        <div className=' grow'>
+        <div className='w-full h-[calc(100vh-90px)] flex bg-gray-200 '>
+          <div className={`${open?'w-1/6':'w-22'} h-full bg-white  inline-block transition-all duration-500 ease-in-out`}>
+            <SideBar open={open} list={role==='admin'?adminList:userList} isAdmin={role==='admin'} />
+          </div>
+        <Outlet/>
+        </div>
+        </div>
+    </div>
+  )
+}
+
+export default Home
