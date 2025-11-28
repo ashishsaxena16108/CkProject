@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify'
 import ResourcesBoard from './pages/ResourcesBoard'
 import CostBoard from './pages/CostBoard'
 import NotFound from './pages/NotFound'
+import Loader from './components/Loader'
 
 function App() {
   
@@ -38,6 +39,7 @@ function App() {
      </Routes>
     </BrowserRouter>
     <ToastContainer/>
+    <Loader/>
     </>
   )
 }

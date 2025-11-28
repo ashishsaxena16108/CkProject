@@ -17,7 +17,7 @@ const CostBoard = () => {
                     })}
           </div>
       </div>
-      <div className="flex flex-3 gap-3 justify-between items-center">
+      <div className="flex flex-3 gap-3 justify-between items-center mx-3">
         <div className='flex gap-2'>
         <input className='bg-white rounded p-1 border border-blue-800' type="date" name="start_date" id="" />
         <input className='bg-white rounded p-1 border border-blue-800' type="date" name="end_date" id="" />
