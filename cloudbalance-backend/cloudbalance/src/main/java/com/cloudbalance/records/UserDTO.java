@@ -1,4 +1,6 @@
 package com.cloudbalance.records;
 
-public record UserDTO() {
+import com.cloudbalance.entities.User;
+
+public record UserDTO(String firstName, String lastName, String email, User.Role role) {
 }
