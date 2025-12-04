@@ -34,11 +34,10 @@ const Navbar = ({ handleBtn }) => {
           <div><button onClick={() => handleLogout()} className='flex border border-blue-600 text-blue-600 rounded-xl font-bold shadow-sm shadow-blue-400 p-2.5'><img src={Logout} alt="" />Logout</button></div>
         </div>
       </div>
-      {isHover &&
-        <div className='flex flex-col fixed right-40 top-18'>
-          <div className=' bg-gray-200 rounded-t-full self-end'>e</div>
-          <div className='bg-gray-200 '>egefcevefe</div>
-        </div>}
+        <div className={`flex flex-col fixed right-40 top-15 transition-all duration-200 ${isHover?'opacity-100':'opacity-0 hidden'}`}>
+          <div className=' self-end w-0 border-b-20 border-b-gray-100 border-l-6 border-l-transparent border-r-6 border-r-transparent'></div>
+          <div className='bg-gray-100 p-2 w-80 h-40 shadow-lg  rounded-md rounded-tr-none'>Profile Information</div>
+        </div>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React,{useState,useRef,useEffect} from 'react'
 import ArrowDown from '/arrow_down.svg'
 
-const Select = ({options,onSelect,initialValue,name}) => {
+const Select = ({options,onSelect,initialValue,name,values}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(initialValue || null);
   const dropdownRef = useRef(null);
@@ -18,9 +18,9 @@ const Select = ({options,onSelect,initialValue,name}) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option) => {
+  const handleSelect = (option,value) => {
     setSelected(option);
-    onSelect(name,option);
+    onSelect(name,value);
     setIsOpen(false);
   };
 
@@ -48,13 +48,13 @@ const Select = ({options,onSelect,initialValue,name}) => {
           tabIndex="-1"
           role="listbox"
         >
-          {options.map((option) => (
+          {options.map((option,index) => (
             <li
               key={option}
               className={`cursor-pointer p-2 hover:bg-blue-50 hover:text-blue-600 ${
                 selected && selected === option ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-900'
               }`}
-              onClick={() => handleSelect(option)}
+              onClick={() => handleSelect(option,values[index])}
               role="option"
               aria-selected={selected && selected === option}
             >

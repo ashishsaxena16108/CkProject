@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Copy from '../../components/Copy';
 import ckScreen1 from '/screenshots/ck_screen1.png'
+import Form from '../../components/Form';
+import { accountInputs } from '../../app/constant';
 const OnboardAccountsBoard = () => {
   const [index, setIndex] = useState(1);
   const handleSubmit = () => {
@@ -64,8 +66,10 @@ const Page1 = ({ setIndex, index }) => {
           <li className='flex'>
             <div>Paste the copied Role ARN below - </div>
           </li>
-          <label className='text-sm text-gray-500 font-medium' htmlFor="roleArn">Enter the IAM Role ARN</label>
-          <input className='border-2 w-1/4 border-black p-2 rounded-lg' placeholder='Enter the IAM Role ARN' type="text" name="roleArn" id="" required/>
+          <div className='w-3/4'>
+          <Form inputs={accountInputs}>
+          </Form>
+          </div>
         </ol>
       </div>
       <div className='flex justify-end w-full'>

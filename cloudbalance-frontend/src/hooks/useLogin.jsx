@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../app/feature/authReducer.js';
 import { adminCredentials } from '../app/constant.jsx';
+import { showLoader } from '../app/feature/loadReducer.js';
 
 const useLogin = () => {
     const [cred, setCred] = useState({});
@@ -16,6 +17,7 @@ const useLogin = () => {
     )
     
     const handleLogin = () => {
+        dispatch(showLoader());
         if(cred.email===adminCredentials.email && cred.password === adminCredentials.password){
             dispatch(login({ isLogin: true, role:'admin' }));
             navigate('/admin/users');

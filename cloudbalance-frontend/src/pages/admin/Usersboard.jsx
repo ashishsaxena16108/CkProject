@@ -11,9 +11,9 @@ const Userboard = () => {
         <div className="btns p-3 flex">
           <Link to={'/admin/adduser'} className='bg-blue-950 text-white rounded p-2 cursor-pointer'>Add New User</Link>
         </div>
-        {users.length===0?<div>
-          <div>No users in the app.</div>
-          <div>Add users by clicking the button Add New User</div>
+        {users.length===0?<div className='flex flex-col justify-center items-center m-28'>
+          <div className='text-xl font bold'>No users in the app.</div>
+          <div className='text-gray-400 m-4'>Add users by clicking the button Add New User</div>
         </div>:
         <div className="table w-[98%]"><Table tableData={users} headers={userTableHeaders}/></div>}
       </div>

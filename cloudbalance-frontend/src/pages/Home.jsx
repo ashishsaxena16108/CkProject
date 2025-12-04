@@ -1,23 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Dashboard from '../components/Dashboard'
 import SideBar from '../components/SideBar';
 import { Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { adminList,userList } from '../app/constant'
+import { hideLoader } from '../app/feature/loadReducer'
 
 const Home = () => {
   const role  = useSelector((state) => state.auth.role);
   const [open, setopen] = useState(true);
+  const dispatch = useDispatch();
   const handleBtn = ()=>{
       setopen(!open);
   }
+  useEffect(() => {
+    const timeout = setTimeout(()=>{
+        dispatch(hideLoader());
+    },1500)
+    return ()=>{
+      clearTimeout(timeout);
+    }
+  }, [dispatch])
+  
   return (
     <div className='font-bold h-screen flex flex-col bg-gray-200 '>
         <Navbar  handleBtn={handleBtn}/>
         <div className=' grow'>
         <div className='w-full h-[calc(100vh-90px)] flex bg-gray-200 '>
-          <div className={`${open?'w-1/6':'w-22'} h-full bg-white  inline-block transition-all duration-500 ease-in-out`}>
+          <div className={`${open?'w-1/6':'w-22'} h-full bg-white  inline-block transition-all duration-300 ease-in-out`}>
             <SideBar open={open} list={role==='admin'?adminList:userList} isAdmin={role==='admin'} />
           </div>
         <Outlet/>

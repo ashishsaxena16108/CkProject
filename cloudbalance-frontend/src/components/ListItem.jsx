@@ -40,7 +40,7 @@ const ListItem = ({item,link,open}) => {
                         alt=""
                         width={40}
                     />
-                    <div className={`whitespace-nowrap transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}
+                    <div className={`whitespace-nowrap transition-opacity  ${open ? 'opacity-100 duration-500' : 'opacity-0 duration-100'}
                 `}>{item.title}</div>
                 </>
             )}

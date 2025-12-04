@@ -11,9 +11,9 @@ const AddUserBoard = React.memo(() => {
     return (
         <div className='w-[95%] relative h-[80%] content bg-white m-3 rounded-xl p-4'>
             <div className='w-[60%] text-md font-normal'>
-                <Form inputs={addUserInputs} values={user} handleChange={handleChange}>
+                <Form inputs={addUserInputs} values={user} handleChange={handleChange} handleSubmit={handleSubmit}>
                     <div className='flex gap-3 justify-end absolute w-1/2 right-[5%]'>
-                        <button className='w-1/3 bg-blue-400 my-12 p-3' onClick={handleSubmit}>Submit</button>
+                        <button className='w-1/3 bg-blue-400 my-12 p-3' type='submit'>Submit</button>
                         <button className='w-1/3 bg-blue-400 my-12 p-3' type='reset'>Reset</button>
                     </div>
                 </Form>

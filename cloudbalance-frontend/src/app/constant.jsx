@@ -6,7 +6,14 @@ import { Link } from 'react-router-dom';
 export const loginInputs = [
     {for:"email",
      type:"email",
-     placeholder:"Enter your email"
+     placeholder:"Enter your email",
+     error:(value)=>{
+       if(!value)
+         return "Field is required";
+       if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value))
+          return "Not valid";
+       return '';
+     }
     },
     {for:"password",
      type:"password",
@@ -16,21 +23,69 @@ export const loginInputs = [
 export const addUserInputs = [
     {for:"firstName",
      type:"text",
-     placeholder:"Enter Your First Name"
+     placeholder:"Enter Your First Name",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        return '';
+     }
     },
     {for:"lastName",
      type:"text",
-     placeholder:"Enter Your Last Name"
+     placeholder:"Enter Your Last Name",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        return '';
+     }
     },
     {for:"email",
      type:"email",
-     placeholder:"Enter Your Email Name"
+     placeholder:"Enter Your Email Name",
+     error:(value)=>{
+       if(!value)
+         return "Field is required";
+       if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value))
+          return "Not valid";
+       return '';
+     }
     },
     {for:"role",
      type:"select",
      options:["User","Read-Only","Admin"],
-     initial:"User"
+     values:["USER","READ_ONLY","ADMIN"]
     },
+]
+export const accountInputs = [
+  {for:"accountArn",
+     type:"text",
+     placeholder:"Enter Your Account ARN",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        if(!/^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):[a-z0-9\\-]+:[a-z0-9\\-]*:([0-9]{12}):(.+)$/.test(value))
+          return "Not valid";
+        return '';
+     }
+    },
+    {for:"accountId",
+     type:"text",
+     placeholder:"Enter Your Account Id",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        return '';
+     }
+    },
+    {for:"accountName",
+     type:"text",
+     placeholder:"Enter Your Account Name",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        return '';
+     }
+    }
 ]
 export const adminList = [{img:'/group.svg',imghover:'/group-white.svg',title:'Users'},{img:'/account.svg',imghover:'/account-white.svg',title:'Accounts'},{img:'/cost.svg',imghover:'/cost_white.svg',title:'Cost Explorer'},{img:'/desktop.svg',imghover:'/desktop-white.svg',title:'Resources'}];
 export const userList = [{img:'/cost.svg',imghover:'/cost_white.svg',title:'Cost Explorer'},{img:'/desktop.svg',imghover:'/desktop-white.svg',title:'Resources'}]
@@ -57,4 +112,11 @@ export const pathTitleMap = new Map([['adduser','Add New User'],
 
 export const resourcesListMap = new Map([['EC2',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Region',field:'region'},{head:'Status',field:'status'}]],['ASG',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Region',field:'region'},{head:'Desired Capacity',field:'desiredCapacity'},{head:'Min Size',field:'minSize'},{head:'Max Size',field:'maxSize'},{head:'Status',field:'status'}]],['RDS',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Engine',field:'engine'},{head:'Region',field:'region'},{head:'Status',field:'status'}]]]);
 
-export const CostExploreList = ['Service','Instance Type','Account ID','Usage Type','Platform','Region','Usage Type Group','Tags','More'];
+export const CostExploreList = ['Service','Instance Type','Account ID','Usage Type','Platform','Region','Purchase Option','Usage Type Group','API Operation','Resource','Availabilityzone','Tenancy','Legal Entity','Billing Entity'];
+
+
+export const dateConstant = {
+  days:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+  months:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'],
+  yearRange:{start:1990,end:(new Date().getFullYear())}
+}
