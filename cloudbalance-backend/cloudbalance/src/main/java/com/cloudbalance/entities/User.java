@@ -1,6 +1,7 @@
 package com.cloudbalance.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    @JsonIgnore
     private String password;
     @Enumerated(value = EnumType.STRING)
     private Role role;

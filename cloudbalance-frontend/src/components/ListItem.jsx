@@ -7,19 +7,15 @@ const ListItem = ({item,link,open}) => {
     const getLinkClassName = ({ isActive }) => {
         const activeOrHoverClass = (open && (isActive || isHover)) ? 'bg-blue-100 font-semibold' : '';
 
-        return `flex p-2 m-4  justify-start gap-5 items-center rounded
+        return `flex p-2 m-1  justify-start gap-5 items-center rounded
                 ${activeOrHoverClass}`;
     };
 
-    // Determine the image source based on active or hover state
     const getIconSrc = ({ isActive }) => {
-        // If the link is active OR the mouse is hovering, use the hover image
         return (isActive || isHover) ? item.imghover : item.img;
     };
 
-    // Determine the image background style
     const getIconBgClass = ({ isActive }) => {
-        // Apply the special background when active OR hovering
         return `${(isActive || isHover) && 'bg-blue-400'} p-1 rounded-md`;
     };
 

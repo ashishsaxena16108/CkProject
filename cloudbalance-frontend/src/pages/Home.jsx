@@ -27,8 +27,8 @@ const Home = () => {
     <div className='font-bold h-screen flex flex-col bg-gray-200 '>
         <Navbar  handleBtn={handleBtn}/>
         <div className=' grow'>
-        <div className='w-full h-[calc(100vh-90px)] flex bg-gray-200 '>
-          <div className={`${open?'w-1/6':'w-22'} h-full bg-white  inline-block transition-all duration-300 ease-in-out`}>
+        <div className='w-full h-[calc(100vh-75px)] flex bg-gray-200 '>
+          <div className={`${open?'w-1/6':'w-14'} h-full bg-white  inline-block transition-all duration-300 ease-in-out`}>
             <SideBar open={open} list={role==='admin'?adminList:userList} isAdmin={role==='admin'} />
           </div>
         <Outlet/>

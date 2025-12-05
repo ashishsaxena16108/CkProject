@@ -12,22 +12,22 @@ const rawCostExplorerData = [
   { month: 'May 2025', service: 'Amazon EC2', cost: 34819.56 },
   { month: 'May 2025', service: 'Savings Plans', cost: 25000.00 },
   { month: 'May 2025', service: 'Amazon RDS', cost: 24944.93 },
+  { month: 'May 2025', service: 'Amazom Marketplace', cost: 25944.93 },
 
   { month: 'Jun 2025', service: 'Amazon EC2', cost: 36596.88 },
   { month: 'Jun 2025', service: 'Savings Plans', cost: 25000.00 },
   { month: 'Jun 2025', service: 'Amazon RDS', cost: 25434.85 },
+  { month: 'Jun 2025', service: 'Amazom Marketplace', cost: 23944.93 },
 
   { month: 'Jul 2025', service: 'Amazon EC2', cost: 42441.19 },
   { month: 'Jul 2025', service: 'Savings Plans', cost: 25000.00 },
   { month: 'Jul 2025', service: 'Amazon RDS', cost: 25296.00 },
+  { month: 'Jul 2025', service: 'Amazom Marketplace', cost: 22944.93 },
 
   { month: 'Aug 2025', service: 'Amazon EC2', cost: 42441.19 },
   { month: 'Aug 2025', service: 'Savings Plans', cost: 25000.00 },
   { month: 'Aug 2025', service: 'Amazon RDS', cost: 25296.00 },
-  
-  
-  // Add data for more months/services as needed to match your image...
-  // For brevity, we'll stop here, but the processing logic handles all months/services.
+  { month: 'Aug 2025', service: 'Amazom Marketplace', cost: 21944.93 },
 ];
 // -----------------------------------------------------------------
 

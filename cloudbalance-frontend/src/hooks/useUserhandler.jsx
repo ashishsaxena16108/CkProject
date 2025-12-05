@@ -1,16 +1,19 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { DummyUsers } from '../users'
+import { toast } from 'react-toastify';
 
-const useUserhandler = () => {
+const useUserhandler = (initialUserData={}) => {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(initialUserData);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     fetch(`${backendUrl}/admin/users`)
       .then(data => data.json())
-      .then(data => setUsers(data));
+      .then(data => setUsers(data))
+      .catch(() => toast.error('Data not loaded'));
+
   }, [backendUrl]);
 
   const handleChange = useCallback((e, arg = '') => {
@@ -33,7 +36,7 @@ const useUserhandler = () => {
     fetch(`${backendUrl}/admin/add-user`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(user)
     }).then(response => {
@@ -42,14 +45,15 @@ const useUserhandler = () => {
       }
       return response.json();
     })
-      .then(data => {
-        console.log('Success:', data);
+      .then(() => {
+        toast.success('Successfully Added');
+        setUser({});
+        navigate('/admin/users');
       })
       .catch(error => {
-        console.error('Error during POST request:', error);
+        toast.error('Error during POST request:', error);
       });
-    setUser({});
-    navigate('/admin/users');
+
   }
 
   return { user, users, handleChange, handleSubmit }

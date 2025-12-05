@@ -8,12 +8,10 @@ import com.cloudbalance.records.UserDTO;
 import com.cloudbalance.repositories.AccountRepository;
 import com.cloudbalance.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,25 +23,24 @@ public class AdminService {
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
-    public User addUser(UserDTO user){
-        User newUser;
-        Optional<User> oldUser = userRepository.findByEmail(user.email());
-        if(oldUser.isPresent()){
-            newUser=oldUser.get();
-            newUser.setEmail(user.email());
-            newUser.setFirstName(user.firstName());
-            newUser.setLastName(user.lastName());
-            newUser.setRole(user.role());
+    public User addUser(UserDTO userDTO){
+        User newOrExistingUser;
+        if (userDTO.id() == null) {
+            newOrExistingUser = User.builder()
+                    .firstName(userDTO.firstName())
+                    .lastName(userDTO.lastName())
+                    .email(userDTO.email())
+                    .role(userDTO.role())
+                    .build();
+        } else {
+            newOrExistingUser = userRepository.findById(userDTO.id())
+                    .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userDTO.id()));
+            newOrExistingUser.setLastName(userDTO.lastName());
+            newOrExistingUser.setEmail(userDTO.email());
+            newOrExistingUser.setRole(userDTO.role());
+            newOrExistingUser.setFirstName(userDTO.firstName());
         }
-        else {
-            newUser = User.builder()
-                    .firstName(user.firstName())
-                    .lastName(user.lastName())
-                    .email(user.email())
-                    .role(user.role())
-                    .accounts(new ArrayList<>()).build();
-        }
-        return userRepository.save(newUser);
+        return userRepository.save(newOrExistingUser);
     }
 
     public List<Account> getAllAccounts(){

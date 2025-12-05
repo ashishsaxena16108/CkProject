@@ -5,9 +5,10 @@ import useUserhandler from '../../hooks/useUserhandler.jsx'
 import { useLocation } from 'react-router-dom'
 
 const AddUserBoard = React.memo(() => {
-    const {handleChange,handleSubmit} = useUserhandler();
     const location = useLocation();
-    const user = location.state?.data;
+    const editUser = location.state?.data || {};
+    const {user,handleChange,handleSubmit} = useUserhandler(editUser);
+    
     return (
         <div className='w-[95%] relative h-[80%] content bg-white m-3 rounded-xl p-4'>
             <div className='w-[60%] text-md font-normal'>

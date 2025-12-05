@@ -13,9 +13,9 @@ const Navbar = ({ handleBtn }) => {
     dispatch(logout());
   }
   return (
-    <div className='flex h-[90px] shadow-xl z-10 items-center w-full bg-white '>
+    <div className='flex h-[75px] shadow-xl z-10 items-center justify-between w-full bg-white '>
       <div className='flex items-center justify-center'>
-        <img className='mx-10' src={CloudLogo} alt="" width={300} />
+        <img className='mx-3' src={CloudLogo} alt="" width={200} />
       </div>
       <div className='w-6/7 flex justify-between'>
         <div className='flex items-center' onClick={()=>handleBtn()}>
@@ -31,7 +31,7 @@ const Navbar = ({ handleBtn }) => {
 
           </div>
           <div className="line bg-gray-200 w-0.5"></div>
-          <div><button onClick={() => handleLogout()} className='flex border border-blue-600 text-blue-600 rounded-xl font-bold shadow-sm shadow-blue-400 p-2.5'><img src={Logout} alt="" />Logout</button></div>
+          <div><button onClick={() => handleLogout()} className='flex border border-blue-600 text-blue-600 rounded font-bold shadow-sm shadow-blue-400 p-2.5'><img src={Logout} alt="" />Logout</button></div>
         </div>
       </div>
         <div className={`flex flex-col fixed right-40 top-15 transition-all duration-200 ${isHover?'opacity-100':'opacity-0 hidden'}`}>

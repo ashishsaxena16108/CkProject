@@ -10,8 +10,10 @@ import MoreBar from '../components/MoreBar';
 
 const CostBoard = () => {
   const [costGroup, setCostGroup] = useState(CostExploreList[0]);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [costGroups,setCostGroups] = useState(CostExploreList.filter((item)=>item!==costGroup));
+  const [filterOpen, setFilterOpen] = useState(true);
   const [chartType,setChartType] = useState('mscolumn2d');
+  
   return (
     <div className="w-[95%] content  m-3 border border-gray-300">
       <div className='flex bg-gray-100 relative border-b border-gray-200'>
@@ -19,15 +21,13 @@ const CostBoard = () => {
           <div>Group By:</div>
           <div className='flex gap-3 text-xs'>
             <div className='p-1 px-4 rounded bg-blue-800 text-white'>
-              {CostExploreList.find((item) => item === costGroup)}
+              {costGroup}
             </div>
             <div className='w-0.5 bg-gray-300'></div>
-            {CostExploreList.filter((item) => item !== costGroup).slice(undefined, 6).map((item, index) => {
-              if (item === costGroup)
-                return '';
-              return <button onClick={() => setCostGroup(item)} className={` p-1 px-4 rounded hover:bg-blue-800 hover:text-white border-transparent bg-white text-blue-700`} key={index}>{item}</button>
+            {costGroups.slice(undefined, 6).map((item, index) => {
+              return <button onClick={() => {setCostGroups(costGroups=>[costGroup,...costGroups].filter((jtem)=>jtem!==item));setCostGroup(item)}} className={` p-1 px-4 rounded hover:bg-blue-800 hover:text-white border-transparent bg-white text-blue-700`} key={index}>{item}</button>
             })}
-            <MoreBar costGroup={costGroup} setCostGroup={setCostGroup}/>
+            <MoreBar costGroup={costGroup} setCostGroup={setCostGroup} setCostGroups={setCostGroups} costGroups={costGroups}/>
           </div>
         </div>
         <div className="flex flex-3 gap-3 justify-between items-center mx-3">
@@ -41,9 +41,9 @@ const CostBoard = () => {
         <div className={`flex flex-col w-full`}>
           <div className='flex justify-between items-center w-full px-3 py-2'><div>Charts</div>
           <div>
-            <button className='p-1 px-4 rounded-s border border-gray-200 hover:bg-blue-100' onClick={()=>setChartType('mscolumn2d')}><img src={BarChart}/></button>
-            <button className='p-1 px-4 border-t border-b border-gray-200 hover:bg-blue-100' onClick={()=>setChartType('msline')}><img src={ShowChart}/></button>
-            <button className='p-1 px-4 rounded-e  text-white border border-gray-200 hover:bg-blue-100' onClick={()=>setChartType('stackedcolumn2d')}><img src={StackedBarChart}/></button>
+            <button className={`p-1 px-4 rounded-s border border-gray-200 hover:bg-blue-100 ${chartType==='mscolumn2d' && 'bg-blue-100'}`} onClick={()=>setChartType('mscolumn2d')}><img src={BarChart}/></button>
+            <button className={`p-1 px-4 border-t border-b border-gray-200 hover:bg-blue-100 ${chartType==='msline' && 'bg-blue-100'}`} onClick={()=>setChartType('msline')}><img src={ShowChart}/></button>
+            <button className={`p-1 px-4 rounded-e  text-white border border-gray-200 hover:bg-blue-100 ${chartType==='stackedcolumn2d' && 'bg-blue-100'}`} onClick={()=>setChartType('stackedcolumn2d')}><img src={StackedBarChart}/></button>
           </div></div>
           <div className='border rounded border-gray-300 m-4'>
           <Chart type={chartType} width={filterOpen?'1000px':'1500px'}/>
