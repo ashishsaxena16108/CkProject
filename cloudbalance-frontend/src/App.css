@@ -7,14 +7,14 @@
     border: 2px solid;
     background-color: white;
 }
-ol {
+ol.order-list {
   counter-reset: orderedlist;
   display: flex;
   align-items: start;
   width: 100%;
 }
 
-ol li::before {
+ol.order-list li::before {
   counter-increment: orderedlist;
   content: counter(orderedlist);
   background-color: #6488f3;

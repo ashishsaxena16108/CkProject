@@ -4,11 +4,11 @@ import Dashboard from '../components/Dashboard'
 import SideBar from '../components/SideBar';
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { adminList,userList } from '../app/constant'
+
 import { hideLoader } from '../app/feature/loadReducer'
 
 const Home = () => {
-  const role  = useSelector((state) => state.auth.role);
+  const role  = useSelector((state) => state.auth.user.role);
   const [open, setopen] = useState(true);
   const dispatch = useDispatch();
   const handleBtn = ()=>{
@@ -29,7 +29,7 @@ const Home = () => {
         <div className=' grow'>
         <div className='w-full h-[calc(100vh-75px)] flex bg-gray-200 '>
           <div className={`${open?'w-1/6':'w-14'} h-full bg-white  inline-block transition-all duration-300 ease-in-out`}>
-            <SideBar open={open} list={role==='admin'?adminList:userList} isAdmin={role==='admin'} />
+            <SideBar open={open} isAdmin={role==='ADMIN' || role==='READ_ONLY'} />
           </div>
         <Outlet/>
         </div>

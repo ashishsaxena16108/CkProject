@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   return (
     
-      <div className=" w-full  overflow-scroll">
+      <div className=" w-full  overflow-scroll" id="top">
         <div className="breadcrumb h-[7%] m-3">
           <Breadcrumb />
           <div className=' text-3xl m-4'>{pathTitleMap.get(location.pathname.split('/').findLast((x)=>x))}</div>

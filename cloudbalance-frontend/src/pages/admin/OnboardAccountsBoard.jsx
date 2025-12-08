@@ -1,24 +1,46 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState,useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import Copy from '../../components/Copy';
 import ckScreen1 from '/screenshots/ck_screen1.png'
 import Form from '../../components/Form';
 import { accountInputs } from '../../app/constant';
+import CheckBox from '/checkbox.png'
+import Radio from '/radio.png'
 const OnboardAccountsBoard = () => {
   const [index, setIndex] = useState(1);
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate('#top');
+  }, [index,navigate]);
   const handleSubmit = () => {
 
   }
   return (
     <div className='m-5 text-sm font-medium '>
-      {index === 1 && <Page1 index={index} setIndex={setIndex} />}
-      {index == 2 && <Page2 index={index} setIndex={setIndex} />}
-      {index == 3 && <Page3 index={index} setIndex={setIndex} handleSubmit={handleSubmit} />}
+      {/* <div className='py-10'>
+        <div>
+          <ol className="flex items-center gap-9">
+            <li className={`${index==1&&'text-blue-700'} flex`}>A. Create an IAM Role</li>
+            <div className='text-2xl font-bold'>&gt;</div>
+            <li className={`${index==2&&'text-blue-700'} flex`}>B. Add Customer Managed Policies</li>
+            <div className='text-2xl font-bold'>&gt;</div>
+            <li className={`${index==3&&'text-blue-700'} flex`}>C. Create Cost & Usage Report</li>
+          </ol>
+        </div>
+        <div className={`h-1.5 ${index==3?'w-full':index==1?'w-1/3':'w-2/3'} bg-green-800 `}></div>
+      </div> */}
+      {index === 1 && <Page1/>}
+      {index == 2 && <Page2/>}
+      {index == 3 && <Page3/>}
+      <div className='flex justify-end w-full'>
+        {index>=1 && <button className='btn' onClick={() => setIndex(index - 1)}>Back</button>}
+        {index!=3 ? <button className='btn' onClick={() => setIndex(index + 1)}>Next</button> : <button className='btn' onClick={() => handleSubmit()}>Submit</button>}
+      </div>
     </div>
   )
 }
 
-const Page1 = ({ setIndex, index }) => {
+const Page1 = () => {
  
   return (
     <div className='m-3 flex flex-col gap-3'>
@@ -72,14 +94,10 @@ const Page1 = ({ setIndex, index }) => {
           </div>
         </ol>
       </div>
-      <div className='flex justify-end w-full'>
-        <button className='btn' onClick={() => setIndex(index - 1)}>Back</button>
-        <button className='btn' onClick={() => setIndex(index + 1)}>Next</button>
-      </div>
     </div>
   )
 }
-const Page2 = ({ setIndex, index }) => {
+const Page2 = () => {
   return (
     <div>
       <div className='font-bold text-2xl'>Add Customer Managed Policies</div>
@@ -112,7 +130,7 @@ const Page2 = ({ setIndex, index }) => {
             <div>In Permission policies, click on <strong>Add permissions &gt; Create Inline Policy</strong></div>
           </li>
           <li className="flex">
-            <div>Click on the JSOn tab and paste the following policy</div>
+            <div>Click on the JSON tab and paste the following policy</div>
           </li>
           <Copy valueToCopy={'dffee'}/>
           <li className="flex">
@@ -122,14 +140,10 @@ const Page2 = ({ setIndex, index }) => {
           <Copy valueToCopy={'S3CrossAccountReplication'}/>
         </ol>
       </div>
-      <div className='flex items-end justify-end w-full'>
-        <button className='btn' onClick={() => setIndex(index - 1)}>Back</button>
-        <button className='btn' onClick={() => setIndex(index + 1)}>Next</button>
-      </div>
     </div>
   )
 }
-const Page3 = ({ setIndex, index, handleSubmit }) => {
+const Page3 = () => {
   return (
     <div>
      <div className='font-bold text-2xl'>Create Cost & Usage Report</div>
@@ -140,21 +154,31 @@ const Page3 = ({ setIndex, index, handleSubmit }) => {
             <div>Go to <Link className='text-blue-600 underline hover:text-blue-400'>Cost and Usage Reports</Link>in the Billing Dashboard and click on <strong>Create report</strong></div>
           </li>
           <li className="flex">
-            <div>Name the report as shown below and select the include resources IDs checkbox - </div>
+            <div>Name the report as shown below and select the <strong>Include resources IDs</strong> checkbox - </div>
           </li>
-          <Copy ck-tuner-275595855473-houly-cur/>
+          <Copy valueToCopy={'ck-tuner-275595855473-houly-cur'}/>
           <div className='text-xs'>Ensure that the following configuration is checked</div>
+          <div className='flex gap-3'><img src={CheckBox} width={20}/><strong>Include Resource Ids</strong></div>
           <div>Click on Next</div>
+          <img src="https://pro.dev2.cloudonomic.net/build/assets/E2-C6N9LpCy.png" alt="" />
           <li className="flex">
             <div>In <i className='text-gray-400'>Configure S3 bucket</i>, provide the name of the S3 bucket that was created -</div>
           </li>
           <div className='text-xs'>Ensure that the following configuration is checked</div>
+          <p class="form_detail_checkbox_label congfig-label">The following default policy will be applied to your bucket</p>
           <div>Click on Save</div>
+          <div className="flex"><img src="https://pro.dev2.cloudonomic.net/build/assets/E3-quBsiSty.png" alt="" /></div>
+          <li className='flex'><div>In the <i className='text-gray-400'>Delivery options</i> section, enter the below-mentioned Report path prefix -</div></li>
+          <div className="text-xs">Report path prefix</div>
+          <Copy valueToCopy={'275595855473'}/>
+          <div className="text-xs">Additionally, ensure that the following checks are in place</div>
+          <div className="text-xs">Please make sure these checks are Enabled in Enable report data integration for:</div>
+          <div className='flex gap-3'><img src={Radio} alt="" width={20}/> <strong>Hourly</strong></div>
+          <div className='flex gap-3'><img src={CheckBox} width={20}/> <strong>Amazon Athena</strong></div>
+          <img src="https://doe95xkn4xgto.cloudfront.net/5.3.png" width={1000} alt="" />
+          <li className='flex'><div>
+            Click on <strong>Next</strong>.Now, review the configuration of the Cost and Usage Report. Once satisfied, click on <strong>Create Report</strong>.</div></li>
         </ol>
-      </div>
-      <div className='flex items-end justify-end w-full'>
-        <button className='btn'onClick={() => setIndex(index - 1)}>Back</button>
-        <button className='btn' onClick={() => handleSubmit()}>Submit</button>
       </div>
     </div>
   )

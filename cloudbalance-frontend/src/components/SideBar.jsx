@@ -1,8 +1,9 @@
 import React from 'react'
 import ListItem from './ListItem'
+import { adminList,userList } from '../app/constant'
 
-const SideBar = ({open,list,isAdmin}) => {
-  
+const SideBar = ({open,isAdmin}) => {
+  const list = isAdmin?adminList:userList; 
 
   return (
     <div className="flex flex-col gap-3 my-2 text-lg  sidebar bg-white">

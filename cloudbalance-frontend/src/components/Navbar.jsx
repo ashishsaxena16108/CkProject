@@ -4,10 +4,11 @@ import Info from '/info.svg'
 import Group from '/group.svg'
 import Logout from '/logout.svg'
 import Menu from '/menu.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../app/feature/authReducer'
 const Navbar = ({ handleBtn }) => {
   const dispatch = useDispatch();
+  const user = useSelector(state=>state.auth.user);
   const [isHover, setIsHover] = useState(false);
   const handleLogout = () => {
     dispatch(logout());
@@ -26,7 +27,7 @@ const Navbar = ({ handleBtn }) => {
             <div className='border border-blue-600 rounded-4xl p-2 bg-blue-50 shadow-lg shadow-blue-300'><img src={Group} alt="" /></div>
             <div>
               <div className='text-sm'>Welcome,</div>
-              <div className='text-blue-500 text-xl flex justify-center'>Ashish Saxena <img onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)} className='inline ms-1' src={Info} alt="" /></div>
+              <div className='text-blue-500 text-xl flex justify-center'>{`${user.firstName} ${user.lastName}`} <img onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)} className='inline ms-1' src={Info} alt="" /></div>
               </div>
 
           </div>
@@ -36,7 +37,7 @@ const Navbar = ({ handleBtn }) => {
       </div>
         <div className={`flex flex-col fixed right-40 top-15 transition-all duration-200 ${isHover?'opacity-100':'opacity-0 hidden'}`}>
           <div className=' self-end w-0 border-b-20 border-b-gray-100 border-l-6 border-l-transparent border-r-6 border-r-transparent'></div>
-          <div className='bg-gray-100 p-2 w-80 h-40 shadow-lg  rounded-md rounded-tr-none'>Profile Information</div>
+          <div className='bg-gray-100 p-2 w-80 h-40 shadow-lg  rounded-md rounded-tr-none'>{`Email : ${user.email}`}</div>
         </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isLogin:localStorage.getItem('isLogin') === 'true',
-    role:'admin',
+    user:{},
 };
 const authSlice = createSlice({
     name:'auth',
@@ -11,11 +11,12 @@ const authSlice = createSlice({
         login:(state,action)=>{
            localStorage.setItem('isLogin',true);
            state.isLogin=action.payload.isLogin;
-           state.role=action.payload.role;
+           state.user=action.payload.user;
         },
         logout:(state)=>{
            localStorage.removeItem('isLogin');
            state.isLogin=false;
+           state.user={};
         }
     },
  });

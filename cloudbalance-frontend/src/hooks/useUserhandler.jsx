@@ -9,7 +9,10 @@ const useUserhandler = (initialUserData={}) => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    fetch(`${backendUrl}/admin/users`)
+    fetch(`${backendUrl}/admin/users`,{
+      method:'GET',
+      credentials:'include'
+    })
       .then(data => data.json())
       .then(data => setUsers(data))
       .catch(() => toast.error('Data not loaded'));
@@ -35,6 +38,7 @@ const useUserhandler = (initialUserData={}) => {
     console.log(user);
     fetch(`${backendUrl}/admin/add-user`, {
       method: 'POST',
+      credentials:'include',
       headers: {
         'Content-Type': 'application/json'
       },

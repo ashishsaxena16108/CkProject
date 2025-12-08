@@ -21,7 +21,7 @@ const Login = React.memo(() => {
       </div>
       <div className='w-2/4'>
         <Form inputs={loginInputs} handleChange={handleChange}>
-        <button className='w-full bg-blue-400 my-12 p-3' onClick={()=>handleLogin()}>Login</button>
+        <button className='w-full bg-blue-400 my-12 p-3' onClick={(e)=>handleLogin(e)}>Login</button>
         </Form>
       </div>
       </div>

@@ -1,6 +1,5 @@
-import Edit from '/edit.svg'
-import Delete from '/delete.svg'
-import { Link } from 'react-router-dom';
+
+import ActionData from '../components/ActionData';
 
 
 export const loginInputs = [
@@ -90,14 +89,7 @@ export const accountInputs = [
 export const adminList = [{img:'/group.svg',imghover:'/group-white.svg',title:'Users'},{img:'/account.svg',imghover:'/account-white.svg',title:'Accounts'},{img:'/cost.svg',imghover:'/cost_white.svg',title:'Cost Explorer'},{img:'/desktop.svg',imghover:'/desktop-white.svg',title:'Resources'}];
 export const userList = [{img:'/cost.svg',imghover:'/cost_white.svg',title:'Cost Explorer'},{img:'/desktop.svg',imghover:'/desktop-white.svg',title:'Resources'}]
 
-export const userTableHeaders = [{head:'First Name',field:'firstName'},{head:'Last Name',field:'lastName'},{head:'Email',field:'email'},{head:'Role',field:'role'},{head:'Actions',body:({data}) => {
-
-  return (
-    <div className='flex justify-center gap-10'>
-    <Link to='/admin/adduser' state={{data:data}}><img src={Edit} alt="edit"/></Link><img src={Delete} alt="delete" />
-    </div>
-  )
-}}];
+export const userTableHeaders = [{head:'First Name',field:'firstName'},{head:'Last Name',field:'lastName'},{head:'Email',field:'email'},{head:'Role',field:'role'},{head:'Actions',body:({data})=><ActionData data={data}/>}];
 
 export const adminCredentials = {email:"admin@cloudbalance.com",password:'admin'};
 

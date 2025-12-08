@@ -22,9 +22,9 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
 
-          <Route path='/' element={<ProtectedRoute roleNeeded={'*'}><Home /></ProtectedRoute>}>
+          <Route path='/' element={<ProtectedRoute roleNeeded={[]}><Home /></ProtectedRoute>}>
 
-          <Route path='/admin' element={<ProtectedRoute roleNeeded={'admin'}><Dashboard /></ProtectedRoute>}>
+          <Route path='/admin' element={<ProtectedRoute roleNeeded={['ADMIN','READ_ONLY']}><Dashboard /></ProtectedRoute>}>
             <Route index element={<Navigate to="users" replace />} />
             <Route path='users' element={<Usersboard />} />
             <Route path='adduser' element={<AddUserBoard />} />
@@ -33,7 +33,7 @@ function App() {
             <Route path='resources' element={<ResourcesBoard />} />
             <Route path='costexplorer' element={<CostBoard />} />
           </Route>
-          <Route path='/user' element={<ProtectedRoute roleNeeded={'user'}><Dashboard /></ProtectedRoute>}>
+          <Route path='/user' element={<ProtectedRoute roleNeeded={['USER']}><Dashboard /></ProtectedRoute>}>
             <Route index element={<Navigate to="costexplorer" replace />} />
             <Route path='resources' element={<ResourcesBoard />} />
             <Route path='costexplorer' element={<CostBoard />} />
@@ -43,8 +43,8 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
       <Loader />
+      <ToastContainer />
     </>
   )
 }
