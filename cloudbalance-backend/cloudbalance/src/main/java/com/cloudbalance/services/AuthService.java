@@ -1,19 +1,35 @@
 package com.cloudbalance.services;
 
-import com.cloudbalance.entities.User;
+import com.cloudbalance.records.UserAuthDTO;
 import com.cloudbalance.records.UserCredential;
-import com.cloudbalance.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-   private final UserRepository userRepository;
-   public User login(UserCredential userCredential){
-       Optional<User> user = userRepository.findByEmail(userCredential.email());
-       return user.orElse(null);
+    private final AuthenticationManager authenticationManager;
+   public UserAuthDTO login(UserCredential userCredential){
+       UsernamePasswordAuthenticationToken authenticationToken =
+               new UsernamePasswordAuthenticationToken(
+                       userCredential.email(),
+                       userCredential.password()
+               );
+       try {
+           Authentication authentication = authenticationManager.authenticate(authenticationToken);
+           SecurityContextHolder.getContext().setAuthentication(authentication);
+           return new UserAuthDTO(authentication.getPrincipal(),"Successfully Authenticated",true);
+       } catch (org.springframework.security.core.AuthenticationException e) {
+           String message = "Authentication failed: Invalid credentials.";
+           if (e instanceof org.springframework.security.authentication.DisabledException) {
+               message = "Account is disabled.";
+           }
+           return new UserAuthDTO(null,message,false);
+       }
    }
 }

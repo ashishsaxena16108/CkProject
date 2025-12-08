@@ -8,6 +8,7 @@ import com.cloudbalance.records.UserDTO;
 import com.cloudbalance.repositories.AccountRepository;
 import com.cloudbalance.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -31,6 +33,7 @@ public class AdminService {
                     .lastName(userDTO.lastName())
                     .email(userDTO.email())
                     .role(userDTO.role())
+                    .password(passwordEncoder.encode(userDTO.firstName().toLowerCase()+'@'+userDTO.lastName().toLowerCase()))
                     .build();
         } else {
             newOrExistingUser = userRepository.findById(userDTO.id())

@@ -1,6 +1,6 @@
 package com.cloudbalance.controllers;
 
-import com.cloudbalance.entities.User;
+import com.cloudbalance.records.UserAuthDTO;
 import com.cloudbalance.records.UserCredential;
 import com.cloudbalance.services.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
    private final AuthService authService;
    @PostMapping("/login")
-   public ResponseEntity<User> login(@RequestBody UserCredential userCredential){
-       User user = authService.login(userCredential);
-       if(user==null)
-           return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-       return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
+   public ResponseEntity<UserAuthDTO> login(@RequestBody UserCredential userCredential){
+       UserAuthDTO response = authService.login(userCredential);
+       if(!response.success())
+           return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+       return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
    }
 }
