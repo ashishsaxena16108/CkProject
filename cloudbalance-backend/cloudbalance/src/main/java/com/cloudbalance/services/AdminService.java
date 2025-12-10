@@ -34,6 +34,7 @@ public class AdminService {
                     .email(userDTO.email())
                     .role(userDTO.role())
                     .password(passwordEncoder.encode(userDTO.firstName().toLowerCase()+'@'+userDTO.lastName().toLowerCase()))
+                    .accounts(userDTO.accounts())
                     .build();
         } else {
             newOrExistingUser = userRepository.findById(userDTO.id())
@@ -42,6 +43,7 @@ public class AdminService {
             newOrExistingUser.setEmail(userDTO.email());
             newOrExistingUser.setRole(userDTO.role());
             newOrExistingUser.setFirstName(userDTO.firstName());
+            newOrExistingUser.setAccounts(userDTO.accounts());
         }
         return userRepository.save(newOrExistingUser);
     }

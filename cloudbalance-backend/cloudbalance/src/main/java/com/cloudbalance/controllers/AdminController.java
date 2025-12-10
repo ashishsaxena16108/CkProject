@@ -2,6 +2,7 @@ package com.cloudbalance.controllers;
 
 import com.cloudbalance.entities.Account;
 import com.cloudbalance.entities.User;
+import com.cloudbalance.records.AccountDTO;
 import com.cloudbalance.records.UserDTO;
 import com.cloudbalance.services.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,8 @@ public class AdminController {
     public ResponseEntity<List<Account>> getAllAccounts(){
         return new ResponseEntity<>(adminService.getAllAccounts(),HttpStatus.ACCEPTED);
     }
-
+    @PostMapping("/add-account")
+    public ResponseEntity<Account> addAccount(@RequestBody AccountDTO accountDTO){
+        return new ResponseEntity<>(adminService.onboardAccount(accountDTO),HttpStatus.CREATED);
+    }
 }

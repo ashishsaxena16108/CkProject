@@ -17,7 +17,7 @@ public class AuthController {
    @PostMapping("/login")
    public ResponseEntity<UserAuthDTO> login(@RequestBody UserCredential userCredential){
        UserAuthDTO response = authService.login(userCredential);
-       if(!response.success())
+       if(response.token()==null)
            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
        return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
    }

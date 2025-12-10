@@ -33,7 +33,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
     @ManyToMany(mappedBy = "users")
-    private List<Account> accounts;
+    private transient List<Account> accounts;
 
     public User(Object principal) {
     }
