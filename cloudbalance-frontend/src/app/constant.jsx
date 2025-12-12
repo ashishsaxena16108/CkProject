@@ -112,3 +112,9 @@ export const dateConstant = {
   months:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'],
   yearRange:{start:1990,end:(new Date().getFullYear())}
 }
+
+export const accountHeaders = [
+  {head:'Account ARN',field:'accountArn'},
+  {head:'Account Name',filed:'accountName'},
+  {head:'Account ID',field:'accountId'}
+]

@@ -8,6 +8,10 @@ const InputFormElement = ({ userData,handleChange,value}) => {
       const errorMessage = "error" in userData ? userData.error(e.target.value):'';
       setError(errorMessage);
   };
+  const onChange = (e)=>{
+    errorHandler(e);
+    handleChange(e);
+  }
   return (
     <div className=' flex flex-col gap-4 w-full'>
       <div className=' flex justify-between items-start'>
@@ -22,7 +26,7 @@ const InputFormElement = ({ userData,handleChange,value}) => {
         {
           userData.type==='select'
           ? <Select className=' border-none p-3 focus:outline-none' id={userData.for} name={userData.for} options={userData.options} values={userData.values} initialValue={value ? value : userData.options[0]} onSelect={handleChange}/>
-          : <input id={userData.for} name={userData.for} className=' appearance-none w-full border-none p-3 focus:outline-none' onChange={(e)=>{errorHandler(e);handleChange(e);}} type={userData.type} placeholder={userData.placeholder} value={value}/>
+          : <input id={userData.for} name={userData.for} className=' appearance-none w-full border-none p-3 focus:outline-none' onChange={onChange} type={userData.type} placeholder={userData.placeholder} value={value}/>
         }
       </div>
     </div>

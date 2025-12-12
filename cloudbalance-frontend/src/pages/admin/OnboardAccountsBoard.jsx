@@ -6,15 +6,14 @@ import Form from '../../components/Form';
 import { accountInputs } from '../../app/constant';
 import CheckBox from '/checkbox.png'
 import Radio from '/radio.png'
+import { useAccountHandler } from '../../hooks/useAccountHandler';
 const OnboardAccountsBoard = () => {
   const [index, setIndex] = useState(1);
   const navigate = useNavigate();
+  const {account,handleChange,handleSubmit} = useAccountHandler();
   useEffect(() => {
     navigate('#top');
   }, [index,navigate]);
-  const handleSubmit = () => {
-
-  }
   return (
     <div className='m-5 text-sm font-medium '>
       {/* <div className='py-10'>
@@ -29,18 +28,18 @@ const OnboardAccountsBoard = () => {
         </div>
         <div className={`h-1.5 ${index==3?'w-full':index==1?'w-1/3':'w-2/3'} bg-green-800 `}></div>
       </div> */}
-      {index === 1 && <Page1/>}
+      {index === 1 && <Page1 handleChange={handleChange} account={account}/>}
       {index == 2 && <Page2/>}
       {index == 3 && <Page3/>}
       <div className='flex justify-end w-full'>
         {index>=1 && <button className='btn' onClick={() => setIndex(index - 1)}>Back</button>}
-        {index!=3 ? <button className='btn' onClick={() => setIndex(index + 1)}>Next</button> : <button className='btn' onClick={() => handleSubmit()}>Submit</button>}
+        {index!=3 ? <button className='btn' onClick={() => setIndex(index + 1)}>Next</button> : <button className='btn' type='submit' onClick={(e)=>handleSubmit(e)}>Submit</button>}
       </div>
     </div>
   )
 }
 
-const Page1 = () => {
+const Page1 = ({handleChange,account}) => {
  
   return (
     <div className='m-3 flex flex-col gap-3'>
@@ -89,7 +88,7 @@ const Page1 = () => {
             <div>Paste the copied Role ARN below - </div>
           </li>
           <div className='w-3/4'>
-          <Form inputs={accountInputs}>
+          <Form inputs={accountInputs} values={account} handleChange={handleChange}>
           </Form>
           </div>
         </ol>
@@ -165,7 +164,7 @@ const Page3 = () => {
             <div>In <i className='text-gray-400'>Configure S3 bucket</i>, provide the name of the S3 bucket that was created -</div>
           </li>
           <div className='text-xs'>Ensure that the following configuration is checked</div>
-          <p class="form_detail_checkbox_label congfig-label">The following default policy will be applied to your bucket</p>
+          <p className="form_detail_checkbox_label congfig-label">The following default policy will be applied to your bucket</p>
           <div>Click on Save</div>
           <div className="flex"><img src="https://pro.dev2.cloudonomic.net/build/assets/E3-quBsiSty.png" alt="" /></div>
           <li className='flex'><div>In the <i className='text-gray-400'>Delivery options</i> section, enter the below-mentioned Report path prefix -</div></li>

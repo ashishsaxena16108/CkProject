@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Table from '../../components/Table.jsx';
 import { userTableHeaders } from '../../app/constant.jsx';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,11 @@ import useUserhandler from '../../hooks/useUserhandler.jsx';
 import { useSelector } from 'react-redux';
 
 const Userboard = () => {
-  const {users} = useUserhandler();
+  const {users,fetchUsers} = useUserhandler();
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers])
+  
   const {role} = useSelector(state=>state.auth.user);
   return (
       <div className="w-[95%] content bg-white m-3 rounded-xl p-4">
