@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import Navbar from '../components/Navbar'
 import Dashboard from '../components/Dashboard'
 import SideBar from '../components/SideBar';
 import { Outlet } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { hideLoader } from '../app/feature/loadReducer'
+import { useSelector } from 'react-redux'
 
 const Home = () => {
   const role  = useSelector((state) => state.auth.user.role);
   const [open, setopen] = useState(true);
-  const dispatch = useDispatch();
   const handleBtn = ()=>{
       setopen(!open);
   }
-  useEffect(() => {
-    const timeout = setTimeout(()=>{
-        dispatch(hideLoader());
-    },1500)
-    return ()=>{
-      clearTimeout(timeout);
-    }
-  }, [dispatch])
-  
   return (
     <div className='font-bold h-screen flex flex-col bg-gray-200 '>
         <Navbar  handleBtn={handleBtn}/>

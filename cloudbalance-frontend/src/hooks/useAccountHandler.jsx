@@ -3,7 +3,9 @@ import { fetchApi } from '../axios/admin/fetch';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { showLoader } from '../app/feature/loadReducer';
+import { hideLoader, showLoader } from '../app/feature/loadReducer';
+import { accountInputs } from '../app/constant';
+import { validate } from '../app/helpers';
 
 export const useAccountHandler = () => {
    const [account, setAccount] = useState({accountArn:'',accountId:'',accountName:''});
@@ -15,15 +17,26 @@ export const useAccountHandler = () => {
            },
            [account],
        )
+    
     const handleSubmit = (e)=>{
         e.preventDefault();
+        if(!validate(accountInputs,account)){
+            toast.error('Give all details correctly');
+            return;
+        }
         dispatch(showLoader());
-        fetchApi('/admin/add-account',account)
+        fetchApi.post('/admin/add-account',account)
         .then(()=>{
             toast.success('Account added successfully');
-            setAccount({});
+            setAccount({accountArn:'',accountId:'',accountName:''});
             navigate('/admin/accounts');
         })
+        .catch(error => {
+                toast.error('Error during POST request:', error);
+              })
+        .finally(()=>{
+                dispatch(hideLoader());
+              })
     }
     return {account,handleChange,handleSubmit}
 }

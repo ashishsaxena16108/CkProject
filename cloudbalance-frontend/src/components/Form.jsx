@@ -10,7 +10,7 @@ const Form = React.memo(({inputs,children,handleChange,values,handleSubmit}) => 
        handleSubmit(e);
   }
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} className='flex flex-col'>
       <div className={gridClasses}>
       {inputs.map((input,index)=>{
         const value = values && values[input?.for];

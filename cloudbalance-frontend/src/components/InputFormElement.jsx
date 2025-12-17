@@ -12,6 +12,11 @@ const InputFormElement = ({ userData,handleChange,value}) => {
     errorHandler(e);
     handleChange(e);
   }
+  const onChangeSelect = (name,value)=>{
+    const errorMessage = "error" in userData ? userData.error(value):'';
+    setError(errorMessage);
+    handleChange(name,value);
+  }
   return (
     <div className=' flex flex-col gap-4 w-full'>
       <div className=' flex justify-between items-start'>
@@ -25,7 +30,7 @@ const InputFormElement = ({ userData,handleChange,value}) => {
       <div className={` border-2 ${error?'border-red-600':'border-gray-400'} rounded-lg w-full`}>
         {
           userData.type==='select'
-          ? <Select className=' border-none p-3 focus:outline-none' id={userData.for} name={userData.for} options={userData.options} values={userData.values} initialValue={value ? value : userData.options[0]} onSelect={handleChange}/>
+          ? <Select className=' border-none p-3 focus:outline-none' id={userData.for} name={userData.for} options={userData.options} values={userData.values} initialValue={value ? value : userData.options[0]} onSelect={onChangeSelect}/>
           : <input id={userData.for} name={userData.for} className=' appearance-none w-full border-none p-3 focus:outline-none' onChange={onChange} type={userData.type} placeholder={userData.placeholder} value={value}/>
         }
       </div>

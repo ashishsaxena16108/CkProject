@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState,useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom';
 import Copy from '../../components/Copy';
 import ckScreen1 from '/screenshots/ck_screen1.png'
 import Form from '../../components/Form';
@@ -9,13 +9,13 @@ import Radio from '/radio.png'
 import { useAccountHandler } from '../../hooks/useAccountHandler';
 const OnboardAccountsBoard = () => {
   const [index, setIndex] = useState(1);
-  const navigate = useNavigate();
   const {account,handleChange,handleSubmit} = useAccountHandler();
-  useEffect(() => {
-    navigate('#top');
-  }, [index,navigate]);
+  const topRef = useRef(null);
+useEffect(() => {
+  topRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [index]);
   return (
-    <div className='m-5 text-sm font-medium '>
+    <div className='m-5 text-sm font-medium ' ref={topRef}>
       {/* <div className='py-10'>
         <div>
           <ol className="flex items-center gap-9">

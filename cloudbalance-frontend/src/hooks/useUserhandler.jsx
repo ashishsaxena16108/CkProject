@@ -4,17 +4,21 @@ import { DummyUsers } from '../users'
 import {fetchApi} from '../axios/admin/fetch';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { showLoader } from '../app/feature/loadReducer';
+import { hideLoader, showLoader } from '../app/feature/loadReducer';
+import { addUserInputs } from '../app/constant';
+import { validate } from '../app/helpers';
 
-const useUserhandler = (initialUserData={}) => {
+const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:'',accounts:[]}) => {
   const [user, setUser] = useState({
   ...initialUserData,
-  accounts: initialUserData.accounts || [],
+  accounts: initialUserData.accounts?initialUserData.accounts:[],
 });
   const [accounts, setAccounts] = useState([]);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  
   const fetchUsers = useCallback(() => {
     fetchApi.get('/admin/users')
       .then(response => {
@@ -28,8 +32,9 @@ const useUserhandler = (initialUserData={}) => {
 
   const fetchAccounts = useCallback(() => {
     fetchApi.get('/admin/accounts')
-    .then(response=>
-      setAccounts(response.data?response.data:[])
+    .then(response=>{
+      setAccounts(response.data);
+    }
     ).catch(()=>{
       toast.error('Accounts Not Loaded')
     })
@@ -59,8 +64,13 @@ const useUserhandler = (initialUserData={}) => {
   setUser(prev => ({ ...prev, [name]: value }));
 }, [user, setUser]);
 
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(!validate(addUserInputs,user)){
+      toast.error('Give all details correctly');
+      return;
+    }
     dispatch(showLoader());
     fetchApi.post(`/admin/add-user`,user).then(response => {
       if (response.status !== 201) {
@@ -70,11 +80,14 @@ const useUserhandler = (initialUserData={}) => {
     })
       .then(() => {
         toast.success('Successfully Added');
-        setUser({accounts:[]});
+        setUser({...initialUserData});
         navigate('/admin/users');
       })
       .catch(error => {
         toast.error('Error during POST request:', error);
+      })
+      .finally(()=>{
+        dispatch(hideLoader());
       });
 
   }

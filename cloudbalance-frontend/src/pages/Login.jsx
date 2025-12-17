@@ -2,16 +2,18 @@ import React, { useEffect } from 'react'
 import CloudLogo from '/cloudlogo.png';
 import Form from '../components/Form';
 import { loginInputs } from '../app/constant.jsx';
-import { hideLoader } from '../app/feature/loadReducer.js';
 import useLogin from '../hooks/useLogin';
 import { useDispatch } from 'react-redux';
+import { logout } from '../app/feature/authReducer.js';
+import { hideLoader } from '../app/feature/loadReducer.js';
 
-const Login = React.memo(() => {
+const Login = () => {
   const {handleChange,handleLogin} = useLogin();
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(hideLoader());
-  },[dispatch]);
+    dispatch(logout());
+  },[]);
   
   return (
     <div className=' mx-auto my-32 flex justify-center'>
@@ -27,6 +29,6 @@ const Login = React.memo(() => {
       </div>
     </div>
   )
-})
+}
 
 export default Login

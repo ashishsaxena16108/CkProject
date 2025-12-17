@@ -26,13 +26,17 @@ fetchApi.interceptors.response.use(
   },
  async (error) => {
     const originalRequest = error.config;
+    if (!error.response) {
+      console.error('Network error or server unreachable');
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
-        const response = await axios.post('/auth/refresh-token', null, {
+        const {email,role} = JSON.parse(localStorage.getItem('user'));
+        const response = await axios.post('/auth/refresh-token', {email,role,refreshToken:localStorage.getItem('refreshToken')}, {
           baseURL: backendUrl,
-          withCredentials: true,
         });
 
         const newAccessToken = response.data.accessToken;
@@ -49,6 +53,6 @@ fetchApi.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-
+    window.location.href = '/login';
     return Promise.reject(error);
   })
