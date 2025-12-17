@@ -13,8 +13,10 @@ import ResourcesBoard from './pages/ResourcesBoard'
 import CostBoard from './pages/CostBoard'
 import NotFound from './pages/NotFound'
 import Loader from './components/Loader'
+import { useSelector } from 'react-redux'
 
 function App() {
+  const {role} = useSelector(state=>state.auth.user)
 
   return (
     <>
@@ -23,7 +25,7 @@ function App() {
           <Route path='/login' element={<Login />} />
 
           <Route path='/' element={<ProtectedRoute roleNeeded={[]}><Home /></ProtectedRoute>}>
-
+          <Route index element={role==='ADMIN'|| role==='READ_ONLY'?<Navigate to="/admin/users" replace/>:<Navigate to="/user/costexplorer" replace/>}/>
           <Route path='/admin' element={<ProtectedRoute roleNeeded={['ADMIN','READ_ONLY']}><Dashboard /></ProtectedRoute>}>
             <Route index element={<Navigate to="users" replace />} />
             <Route path='users' element={<Usersboard />} />

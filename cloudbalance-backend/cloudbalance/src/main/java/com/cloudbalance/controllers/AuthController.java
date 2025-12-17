@@ -1,5 +1,6 @@
 package com.cloudbalance.controllers;
 
+import com.cloudbalance.records.RefreshRequestDTO;
 import com.cloudbalance.records.UserAuthDTO;
 import com.cloudbalance.records.UserCredential;
 import com.cloudbalance.services.AuthService;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin
 @RequiredArgsConstructor
 public class AuthController {
    private final AuthService authService;
    @PostMapping("/login")
    public ResponseEntity<UserAuthDTO> login(@RequestBody UserCredential userCredential){
-       UserAuthDTO response = authService.login(userCredential);
-       if(response.token()==null)
-           return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-       return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
+       return new ResponseEntity<>(authService.login(userCredential),HttpStatus.ACCEPTED);
+   }
+   @PostMapping("/refresh-token")
+    public ResponseEntity<Object> refreshToken(@RequestBody RefreshRequestDTO requestDTO){
+       return new ResponseEntity<>(authService.refreshToken(requestDTO),HttpStatus.OK);
    }
 }

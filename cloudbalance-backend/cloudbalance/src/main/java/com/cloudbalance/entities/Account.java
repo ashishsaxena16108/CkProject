@@ -1,15 +1,20 @@
 package com.cloudbalance.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "accounts")
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Account {
     @Id
@@ -19,5 +24,11 @@ public class Account {
     private String accountArn;
     private String accountName;
     @ManyToMany
+    @JoinTable(
+            name = "users_accounts",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
     private List<User> users;
 }

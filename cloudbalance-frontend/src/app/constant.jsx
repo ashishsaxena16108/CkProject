@@ -16,7 +16,12 @@ export const loginInputs = [
     },
     {for:"password",
      type:"password",
-     placeholder:"Enter your password"
+     placeholder:"Enter your password",
+     error:(value)=>{
+        if(!value)
+          return "Field is required";
+        return '';
+     }
     }
 ]
 export const addUserInputs = [
@@ -51,8 +56,13 @@ export const addUserInputs = [
     },
     {for:"role",
      type:"select",
-     options:["User","Read-Only","Admin"],
-     values:["USER","READ_ONLY","ADMIN"]
+     options:["Select role","User","Read-Only","Admin"],
+     values:["none","USER","READ_ONLY","ADMIN"],
+     error:(value)=>{
+        if(value==="none")
+          return "Field is required";
+        return '';
+     }
     },
 ]
 export const accountInputs = [
@@ -115,6 +125,6 @@ export const dateConstant = {
 
 export const accountHeaders = [
   {head:'Account ARN',field:'accountArn'},
-  {head:'Account Name',filed:'accountName'},
+  {head:'Account Name',field:'accountName'},
   {head:'Account ID',field:'accountId'}
 ]

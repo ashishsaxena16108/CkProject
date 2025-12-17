@@ -2,6 +2,7 @@ package com.cloudbalance.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,10 +34,12 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
     @ManyToMany(mappedBy = "users")
-    private transient List<Account> accounts;
+    @JsonIgnoreProperties("users")
+    private List<Account> accounts;
 
     public User(Object principal) {
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -50,25 +53,6 @@ public class User implements UserDetails {
         return this.email;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public enum Role{
         ADMIN,USER,READ_ONLY

@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import Folder from '/open-folder.png'
 import { useSelector } from 'react-redux';
-import useUserhandler from '../../hooks/useUserhandler';
-import Table from '../../components/Table';
-import { accountHeaders } from '../../app/constant';
+import useUserhandler from '../../hooks/useUserhandler.jsx';
+import Table from '../../components/Table.jsx';
+import { accountHeaders } from '../../app/constant.jsx';
 
 const AccountsBoard = () => {
   
@@ -17,7 +17,10 @@ const AccountsBoard = () => {
   return (
     <div className='w-[95%] relative h-full content bg-white m-3 rounded-xl p-4'>
       {accounts.length!==0 ? 
-      <div className='flex justify-center items-center'>
+      <div className='flex flex-col justify-center items-center'>
+         <div className='self-start my-5'>
+          {role==='ADMIN' && <Link to='/admin/accounts/onboarding' className='bg-blue-800 text-white p-3 px-7 rounded-lg'>Link Account</Link>}
+          </div>
          <Table tableData={accounts} headers={accountHeaders}/>
       </div>
       : 
