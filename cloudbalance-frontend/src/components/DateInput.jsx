@@ -1,19 +1,11 @@
 import React, { useState,useEffect,useRef } from 'react'
 import { dateConstant } from '../app/constant';
 
-const DateInput = () => {
+const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',year:2025}}) => {
     const [open, setOpen] = useState(false);
-    const [startDate, setStartDate] = useState({
-        day: dateConstant.days[0],
-        month: dateConstant.months[4],
-        year: dateConstant.yearRange.end,
-    });
+    const [startDate, setStartDate] = useState(start);
 
-    const [endDate, setEndDate] = useState({
-        day: dateConstant.days[0],
-        month: dateConstant.months[7],
-        year: dateConstant.yearRange.end,
-    });
+    const [endDate, setEndDate] = useState(end);
     const pickerRef = useRef(null);
     useEffect(() => {
         function handleClickOutside(event) {
@@ -49,34 +41,34 @@ const DateInput = () => {
             <div ref={pickerRef} className={`${open ? 'opacity-100 duration-200' : 'opacity-0 duration-100 pointer-events-none'} 
             absolute top-full left-1/12 -translate-x-1/2 w-80
             bg-white shadow-xl rounded p-4 z-10 mt-1 flex flex-col justify-center items-center gap-3 border border-gray-300`}>
-                <div className='flex'>Start Date:
-                    <select name="day" id="" onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick}>
+                <div className='flex gap-2'>Start Date:
+                    <select name="day" id=""  onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick} value={startDate.day}>
                         {dateConstant.days.map((day) => {
                             return <option value={day} key={day}>{day}</option>
                         })}
                     </select>
-                    <select name="month" id="" onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick}>
+                    <select name="month" id="" onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick} value={startDate.month}>
                         {dateConstant.months.map((month) => {
                             return <option value={month} key={month}>{month}</option>
                         })}
                     </select>
-                    <select name="year" id="" onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick}>
+                    <select name="year" id=""  onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick} value={startDate.year}>
                         {getYearArray()
                             .map(year => (<option value={year} key={year}>{year}</option>))}
                     </select>
                 </div>
-                <div className='flex'>End Date:
-                    <select name="day" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick}>
-                        {dateConstant.days.map((day, index) => {
-                            return <option value={day} key={index}>{day}</option>
+                <div className='flex gap-2'>End Date:
+                    <select name="day" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick} value={endDate.day}>
+                        {dateConstant.days.map((day) => {
+                            return <option value={day} key={day}>{day}</option>
                         })}
                     </select>
-                    <select name="month" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick}>
-                        {dateConstant.months.map((month, index) => {
-                            return <option value={month} key={index}>{month}</option>
+                    <select name="month" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick} value={endDate.month}>
+                        {dateConstant.months.map((month) => {
+                            return <option value={month} key={month}>{month}</option>
                         })}
                     </select>
-                    <select name="year" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick}>
+                    <select name="year" id="" onChange={(e) => handleChange(e, 'end')} onClick={handleDropdownClick} value={endDate.year}>
                         {getYearArray()
                             .map((year) => {
                                 return <option value={year} key={year}>{year}</option>

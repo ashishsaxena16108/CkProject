@@ -2,7 +2,7 @@ import React,{useState,useEffect,useRef} from 'react'
 import ArrowDown from '/arrow_down.svg'
 import { CostExploreList } from '../app/constant';
 
-const MoreBar = ({costGroup,setCostGroup,costGroups,setCostGroups}) => {
+const MoreBar = ({costGroups,handleGroupButton}) => {
   const [moreOpen, setMoreOpen] = useState(false);
   const pickerRef = useRef(null);
       useEffect(() => {
@@ -26,7 +26,7 @@ const MoreBar = ({costGroup,setCostGroup,costGroups,setCostGroups}) => {
           <div className='mx-2 self-end w-0 border-b-12 border-b-white border-l-6 border-l-transparent border-r-6 border-r-transparent'></div>
             <ul className='bg-white p-2'>
               {costGroups.slice(6,undefined).map((item)=>{
-            return <li key={item} onClick={() => {setCostGroups(costGroups=>[costGroup,...costGroups].filter(jtem=>jtem!==item));setCostGroup(item)}} className='p-2 hover:bg-blue-200'>{item}</li>
+            return <li key={item} onClick={() => handleGroupButton(item)} className='p-2 hover:bg-blue-200'>{item}</li>
           })}
           </ul>
           </div>:''}

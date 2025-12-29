@@ -17,7 +17,13 @@ export const useAccountHandler = () => {
            },
            [account],
        )
-    
+    const validateToContinue = ()=>{
+        if(!validate(accountInputs,account)){
+            toast.error('Fill details to continue');
+            return false;
+        }
+        return true;
+    }
     const handleSubmit = (e)=>{
         e.preventDefault();
         if(!validate(accountInputs,account)){
@@ -38,5 +44,5 @@ export const useAccountHandler = () => {
                 dispatch(hideLoader());
               })
     }
-    return {account,handleChange,handleSubmit}
+    return {account,handleChange,handleSubmit,validateToContinue}
 }

@@ -19,3 +19,63 @@
 .animate-bouncing-bars {
   animation: bounce-height 1.2s infinite ease-in-out;
 }
+
+/* Container for the entire custom tooltip */
+.tooltip_wrapper.cudos_tooltip {
+  min-width: 280px;
+  font-family: "Source Sans Pro", sans-serif;
+  color: #5a5a5a;
+  line-height: 1.5;
+}
+
+/* The Date Header (e.g., Aug 2025) */
+.headingCont {
+  font-weight: bold;
+  font-size: 15px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e1e1e1;
+  color: #ffffff;
+}
+
+/* Individual service rows */
+.tooltip_wrapper .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  width: 100%;
+}
+
+/* Service Name */
+.tooltip_wrapper .row label {
+  font-weight: 500;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cost and Percentage Value */
+.tooltip_wrapper .row b {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* The Footer/Total section */
+.totalStyle {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #ccc;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Optional: Clean up FusionCharts default padding */
+.fc__tooltip {
+  padding: 10px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+  border-radius: 4px !important;
+}

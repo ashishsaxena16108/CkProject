@@ -1,5 +1,5 @@
 import React, { useState,useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Copy from '../../components/Copy';
 import ckScreen1 from '/screenshots/ck_screen1.png'
 import Form from '../../components/Form';
@@ -9,8 +9,19 @@ import Radio from '/radio.png'
 import { useAccountHandler } from '../../hooks/useAccountHandler';
 const OnboardAccountsBoard = () => {
   const [index, setIndex] = useState(1);
-  const {account,handleChange,handleSubmit} = useAccountHandler();
+  const {account,handleChange,handleSubmit,validateToContinue} = useAccountHandler();
   const topRef = useRef(null);
+  const navigate = useNavigate();
+  const handleNext = ()=>{
+      if(index===1 && !validateToContinue())
+        return;
+      setIndex(index + 1);
+  };
+  const handleBack = ()=>{
+    if(index===1)
+       navigate(-1);
+    setIndex(index-1);
+  }
 useEffect(() => {
   topRef.current?.scrollIntoView({ behavior: "smooth" });
 }, [index]);
@@ -32,8 +43,8 @@ useEffect(() => {
       {index == 2 && <Page2/>}
       {index == 3 && <Page3/>}
       <div className='flex justify-end w-full'>
-        {index>=1 && <button className='btn' onClick={() => setIndex(index - 1)}>Back</button>}
-        {index!=3 ? <button className='btn' onClick={() => setIndex(index + 1)}>Next</button> : <button className='btn' type='submit' onClick={(e)=>handleSubmit(e)}>Submit</button>}
+        {index>=1 && <button className='btn' onClick={() => handleBack()}>Back</button>}
+        {index!=3 ? <button className='btn' onClick={() => handleNext()}>Next</button> : <button className='btn' type='submit' onClick={(e)=>handleSubmit(e)}>Submit</button>}
       </div>
     </div>
   )
