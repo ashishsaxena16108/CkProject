@@ -6,16 +6,19 @@ import com.cloudbalance.entities.User;
 import com.cloudbalance.exceptions.DuplicateAccountException;
 import com.cloudbalance.exceptions.DuplicateUserException;
 import com.cloudbalance.records.AccountDTO;
+import com.cloudbalance.records.CostReportDTO;
 import com.cloudbalance.records.UserDTO;
 import com.cloudbalance.repositories.AccountRepository;
 import com.cloudbalance.repositories.UserRepository;
+import com.cloudbalance.utils.SnowUtil;
+import com.snowflake.snowpark_java.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +27,13 @@ public class AdminService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SnowUtil snowUtil;
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers(){
+        return userRepository.findAll().stream().map(u->new UserDTO(u.getId()
+                ,u.getFirstName(),u.getLastName(),u.getEmail(),u.getRole(),
+                        new ArrayList<>(u.getAccounts())))
+                .toList();
     }
     @Transactional
     public User addUser(UserDTO userDTO){
@@ -39,7 +46,10 @@ public class AdminService {
                     .lastName(userDTO.lastName())
                     .email(userDTO.email())
                     .role(userDTO.role())
-                    .password(passwordEncoder.encode(userDTO.firstName().toLowerCase()+'@'+userDTO.lastName().toLowerCase()))
+                    .password(passwordEncoder.encode(userDTO.firstName()
+                            .toLowerCase()+'@'
+                            +userDTO.lastName()
+                            .toLowerCase().replace(' ','_')))
                     .build();
 
         } else {
@@ -54,13 +64,16 @@ public class AdminService {
                 userDTO.accounts().stream().map(Account::getId).toList()
         );
 
-        accounts.forEach(acc -> acc.getUsers().add(newOrExistingUser));
+        accounts.forEach(acc -> {
+            if(!acc.getUsers().contains(newOrExistingUser))
+               acc.getUsers().add(newOrExistingUser);
+        });
         newOrExistingUser.setAccounts(accounts);
         return userRepository.save(newOrExistingUser);
     }
 
-    public List<Account> getAllAccounts(){
-        return accountRepository.findAll();
+    public List<AccountDTO> getAllAccounts(){
+        return accountRepository.findAll().stream().map(a->new AccountDTO(a.getId(),a.getAccountArn(),a.getAccountId(),a.getAccountName())).toList();
     }
 
     public Account onboardAccount(AccountDTO accountDTO){
@@ -71,5 +84,9 @@ public class AdminService {
                 .accountId(accountDTO.accountId())
                 .accountName(accountDTO.accountName()).build();
         return accountRepository.save(account);
+    }
+    public CostReportDTO getReports(String groupBy){
+        Session session = snowUtil.createSession();
+        return snowUtil.getDataByGroup(session,groupBy);
     }
 }

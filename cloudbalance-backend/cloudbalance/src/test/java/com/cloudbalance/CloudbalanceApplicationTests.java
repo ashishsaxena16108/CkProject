@@ -8,6 +8,7 @@ class CloudbalanceApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

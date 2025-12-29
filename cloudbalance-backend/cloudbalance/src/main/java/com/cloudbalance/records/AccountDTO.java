@@ -1,4 +1,4 @@
 package com.cloudbalance.records;
 
-public record AccountDTO(String accountArn,String accountId,String accountName) {
+public record AccountDTO(Long id,String accountArn,String accountId,String accountName) {
 }

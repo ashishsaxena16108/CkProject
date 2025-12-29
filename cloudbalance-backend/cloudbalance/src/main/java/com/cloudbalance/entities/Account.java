@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -23,12 +24,7 @@ public class Account {
     private String accountId;
     private String accountArn;
     private String accountName;
-    @ManyToMany
-    @JoinTable(
-            name = "users_accounts",
-            joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "accounts")
     @JsonIgnore
     private List<User> users;
 }
