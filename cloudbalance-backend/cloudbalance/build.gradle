@@ -29,6 +29,7 @@ dependencies {
     implementation ('com.snowflake:snowpark:1.16.0'){
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation('com.mysql:mysql-connector-j:9.3.0')
     implementation("org.springframework.boot:spring-boot-starter-data-redis:3.5.8")
     implementation 'org.springframework.boot:spring-boot-starter-security'

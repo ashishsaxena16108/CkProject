@@ -2,6 +2,7 @@ package com.cloudbalance.controllers;
 
 import com.cloudbalance.records.*;
 import com.cloudbalance.services.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AdminController {
     }
     @Secured("ROLE_ADMIN")
     @PostMapping("/add-user")
-    public ResponseEntity<AddedUserDTO> addUser(@RequestBody UserDTO user){
+    public ResponseEntity<AddedUserDTO> addUser(@Valid @RequestBody UserDTO user){
         return new ResponseEntity<>(new AddedUserDTO(adminService.addUser(user),
                 user.id()==null?"User Successfully Added":"User Updated Successfully"), HttpStatus.CREATED);
     }
@@ -33,12 +34,24 @@ public class AdminController {
     }
     @Secured("ROLE_ADMIN")
     @PostMapping("/add-account")
-    public ResponseEntity<AddedAccountDTO> addAccount(@RequestBody AccountDTO accountDTO){
-        return new ResponseEntity<>(new AddedAccountDTO(adminService.onboardAccount(accountDTO),"Account Onboarded Successfully"),HttpStatus.CREATED);
+    public ResponseEntity<AddedAccountDTO> addAccount(@Valid @RequestBody AccountDTO accountDTO){
+        return new ResponseEntity<>(new AddedAccountDTO(adminService.onboardAccount(accountDTO),"Account Onboarded Successfully")
+                ,HttpStatus.CREATED);
     }
     @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
     @GetMapping("/reports")
     public ResponseEntity<CostReportDTO> getAllReports(@RequestParam(defaultValue = "service",name = "group_by") String groupBy){
         return ResponseEntity.ok(adminService.getReports(groupBy));
+    }
+    @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
+    @GetMapping("/filters")
+    public ResponseEntity<List<String>> getFilters(@RequestParam(defaultValue = "service",name = "group_by") String groupBy){
+        return ResponseEntity.ok(adminService.getFilters(groupBy));
+    }
+    @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
+    @PostMapping("/reports")
+    public ResponseEntity<CostReportDTO> getFilterReport(@RequestParam(defaultValue = "service",name="group_by")String groupBy
+            ,@RequestBody List<String> filters){
+        return ResponseEntity.ok(adminService.getFilterReport(groupBy,filters));
     }
 }

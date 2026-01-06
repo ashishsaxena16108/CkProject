@@ -13,10 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.naming.AuthenticationException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -58,6 +62,14 @@ public class ControllerAdvice {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponseDTO> handleInvalidCredentialsException(BadCredentialsException e){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid Credentials"));
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,String>> handleValidation(MethodArgumentNotValidException e){
+        Map<String,String> response = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach(error-> response.put(((FieldError) error)
+                .getField(),
+                error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(response);
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {

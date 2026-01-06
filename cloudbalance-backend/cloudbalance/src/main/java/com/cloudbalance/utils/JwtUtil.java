@@ -60,6 +60,10 @@ public class JwtUtil{
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String role = extractClaim(token,claims->claims.get("role",String.class));
+        boolean isRoleValid = userDetails.getAuthorities().stream()
+                .anyMatch(a->a.getAuthority()
+                        .equals("ROLE_"+role));
+        return (username.equals(userDetails.getUsername()) && isRoleValid && !isTokenExpired(token));
     }
 }

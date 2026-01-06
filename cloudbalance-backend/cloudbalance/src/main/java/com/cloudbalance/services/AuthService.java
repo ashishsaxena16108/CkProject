@@ -1,6 +1,6 @@
 package com.cloudbalance.services;
 
-import com.cloudbalance.entities.User;
+import com.cloudbalance.entities.SecurityUser;
 import com.cloudbalance.exceptions.InvalidRefreshTokenException;
 import com.cloudbalance.exceptions.RefreshTokenExpiredException;
 import com.cloudbalance.records.RefreshRequestDTO;
@@ -34,7 +34,7 @@ public class AuthService {
                );
            Authentication authentication = authenticationManager.authenticate(authenticationToken);
            if(authentication.isAuthenticated()){
-            User user = (User) authentication.getPrincipal();
+            SecurityUser user = (SecurityUser) authentication.getPrincipal();
             String refreshToken= user.getFirstName()+"refresh"+user.getEmail();
             redisUtil.set(userCredential.email(),refreshToken);
             return new UserAuthDTO(user

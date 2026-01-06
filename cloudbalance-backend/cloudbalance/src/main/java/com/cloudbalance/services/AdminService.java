@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,7 @@ public class AdminService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final SnowUtil snowUtil;
+    private final Session session;
 
     public List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(u->new UserDTO(u.getId()
@@ -60,15 +60,12 @@ public class AdminService {
             newOrExistingUser.setRole(userDTO.role());
             newOrExistingUser.setFirstName(userDTO.firstName());
         }
-        List<Account> accounts = accountRepository.findAllById(
-                userDTO.accounts().stream().map(Account::getId).toList()
-        );
-
-        accounts.forEach(acc -> {
-            if(!acc.getUsers().contains(newOrExistingUser))
-               acc.getUsers().add(newOrExistingUser);
-        });
-        newOrExistingUser.setAccounts(accounts);
+        if(newOrExistingUser.getRole().equals(User.Role.USER)) {
+            List<Account> accounts = accountRepository.findAllById(
+                    userDTO.accounts().stream().map(Account::getId).toList()
+            );
+            newOrExistingUser.setAccounts(accounts);
+        }
         return userRepository.save(newOrExistingUser);
     }
 
@@ -86,7 +83,12 @@ public class AdminService {
         return accountRepository.save(account);
     }
     public CostReportDTO getReports(String groupBy){
-        Session session = snowUtil.createSession();
         return snowUtil.getDataByGroup(session,groupBy);
+    }
+    public List<String> getFilters(String groupBy){
+        return snowUtil.getFiltersByGroup(session,groupBy);
+    }
+    public CostReportDTO getFilterReport(String groupBy,List<String> filterValues){
+        return snowUtil.getFilterDataByGroup(session,groupBy,filterValues);
     }
 }
