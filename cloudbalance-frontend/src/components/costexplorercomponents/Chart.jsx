@@ -27,7 +27,9 @@ const Chart = ({type,width,data}) => {
                 showHoverEffect: '1',
                 showValues: '0',
                 labelDisplay: 'AUTO',
-                
+                "showToolTipShadow": "0",
+    "toolTipBgAlpha": "0",
+    "toolTipBorderAlpha": "0",
             },
             categories: categories, 
             dataset: dataset, 

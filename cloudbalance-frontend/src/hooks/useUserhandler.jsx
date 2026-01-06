@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { DummyUsers } from '../users'
 import {fetchApi} from '../axios/admin/fetch';
@@ -13,6 +13,10 @@ const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:
   ...initialUserData,
   accounts: initialUserData.accounts?initialUserData.accounts:[],
 });
+  const userRef = useRef({
+  ...initialUserData,
+  accounts: initialUserData.accounts?initialUserData.accounts:[],
+})
   const [accounts, setAccounts] = useState([]);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
@@ -26,7 +30,7 @@ const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:
       })
       .catch((error) => {
         console.log(error);
-        toast.error('Data Not loaded');
+        toast.error(error.response.data.message);
       });
   }, []);
 
@@ -35,8 +39,8 @@ const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:
     .then(response=>{
       setAccounts(response.data);
     }
-    ).catch(()=>{
-      toast.error('Accounts Not Loaded')
+    ).catch((error)=>{
+      toast.error(error.response.data.message)
     })
   }, []);
 
@@ -84,7 +88,7 @@ const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:
         navigate('/admin/users');
       })
       .catch(error => {
-        toast.error('Error during POST request:', error);
+        toast.error(error.response.data.message);
       })
       .finally(()=>{
         dispatch(hideLoader());
@@ -92,7 +96,12 @@ const useUserhandler = (initialUserData={firstName:'',lastName:'',email:'',role:
 
   }
 
-  return { user, users,accounts, handleChange, handleSubmit ,fetchAccounts,fetchUsers}
+  const handleCancel = ()=>{
+    setUser(userRef.current);
+    navigate(-1);
+  }
+
+  return { user, users,accounts, handleChange, handleCancel, handleSubmit,fetchAccounts,fetchUsers}
 }
 
 export default useUserhandler

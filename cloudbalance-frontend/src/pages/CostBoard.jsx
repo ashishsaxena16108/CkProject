@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { CostExploreList } from '../app/constant';
-import Filter from '/tune.svg'
-import Chart from '../components/Chart';
+import FilterImg from '/tune.svg'
+import Chart from '../components/costexplorercomponents/Chart';
 import BarChart from '/bar_chart.svg';
 import ShowChart from '/show_chart.svg';
 import StackedBarChart from '/stacked_bar_chart.svg';
 import DateInput from '../components/DateInput';
-import MoreBar from '../components/MoreBar';
+import MoreBar from '../components/costexplorercomponents/MoreBar';
 import useCostReportHandler from '../hooks/useCostReportHandler';
 import Table from '../components/Table';
-import SectionLoader from '../components/SectionLoader';
+import SectionLoader from '../components/costexplorercomponents/SectionLoader';
+import FilterSection from '../components/costexplorercomponents/FilterSection';
+import { useSelector } from 'react-redux';
 
 const CostBoard = () => {
-  const {fetchReports,headers,tableData,chartData,isLoading} = useCostReportHandler();
+  const {fetchReports,fetchFilterReports,headers,tableData,chartData,isLoading} = useCostReportHandler();
   const [costGroup, setCostGroup] = useState(CostExploreList[0]);
   const [costGroups,setCostGroups] = useState(CostExploreList.filter((item)=>item!==costGroup));
   const [filterOpen, setFilterOpen] = useState(false);
   const [chartType,setChartType] = useState('mscolumn2d');
+  const {costaccounts}=useSelector(state=>state.accounts);
   useEffect(() => {
-    fetchReports();
-  }, []);
+    fetchReports(costGroup);
+  }, [costaccounts]);
+  useEffect(()=>{
+    console.log('Data Changed');
+  },[chartData,tableData]);
   const handleGroupButton = (item)=>{
     setCostGroups(costGroups=>[costGroup,...costGroups].filter((jtem)=>jtem!==item));
     setCostGroup(item);
-    console.log(item);
     fetchReports(item);
   }
   
@@ -47,7 +52,7 @@ const CostBoard = () => {
           <div className='flex gap-2 items-center'>
             <DateInput/>
           </div>
-          <button className='text-white bg-blue-800 rounded p-1 cursor-pointer' onClick={() => setFilterOpen(!filterOpen)}><img src={Filter}/></button>
+          <button className='text-white bg-blue-800 rounded p-1 cursor-pointer' onClick={() => setFilterOpen(!filterOpen)}><img src={FilterImg}/></button>
         </div>
       </div>
       <div className='bg-white flex'>
@@ -67,16 +72,7 @@ const CostBoard = () => {
           </div>
         </div>
         
-        <div className={` ${filterOpen ? 'w-3/10 max-w-full duration-300' : 'w-0 max-w-0 duration-300'} overflow-x-hidden shadow-lg border-s border-gray-200`}>
-          <div className='flex justify-between items-center p-3'><div>Filters</div><div className='text-xs text-blue-800'>Reset All</div></div>
-          <div className=' flex flex-col overflow-y-auto text-xs'>
-            {CostExploreList.map((item, index) => {
-              if (index == CostExploreList.length - 1)
-                return <div key={item} className='flex gap-4 py-3 m-2 items-center'><input className='border rounded h-4 w-4 checked:bg-blue-800 checked:text-white peer-checked:opacity-100 ' key={item.toLocaleLowerCase()} type="checkbox" name={item.toLocaleLowerCase()} id="" /><div>{item}</div></div>
-              return <div key={item} className='flex gap-4 py-3 m-2 items-center border-b-2 border-gray-300'><input className='border rounded h-4 w-4 checked:bg-blue-800 checked:text-white peer-checked:opacity-100 ' key={item.toLocaleLowerCase()} type="checkbox" name={item.toLocaleLowerCase()} id="" /><div>{item}</div></div>
-            })}
-          </div>
-        </div>
+        <FilterSection fetchFilterReports={fetchFilterReports} filterOpen={filterOpen}/>
       </div>
     </div>
   )

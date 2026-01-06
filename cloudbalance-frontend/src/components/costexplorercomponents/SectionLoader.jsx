@@ -1,8 +1,8 @@
 import React from 'react'
 
-const SectionLoader = () => {
+const SectionLoader = ({height}) => {
   return (
-    <div className="mt-36 backdrop-blur-lg flex justify-center items-center">
+    <div className={`${height} backdrop-blur-lg flex justify-center items-center`}>
       <div className="flex justify-center items-center h-full w-full space-x-1">
       {/* Bar 1 */}
       <div 

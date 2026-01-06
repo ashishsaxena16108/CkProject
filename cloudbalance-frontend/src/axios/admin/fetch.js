@@ -54,5 +54,6 @@ fetchApi.interceptors.response.use(
       }
     }
     window.location.href = '/login';
+    console.error(error);
     return Promise.reject(error);
   })

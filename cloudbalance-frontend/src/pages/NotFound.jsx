@@ -8,7 +8,7 @@ import { hideLoader } from '../app/feature/loadReducer';
 const NotFound = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const notAccessError = location.state.notaccesserror;
+  const notAccessError = location.state?.notaccesserror;
   useEffect(()=>{
      if(notAccessError)
         toast.error('You have not access to this link');

@@ -38,7 +38,7 @@ export const useAccountHandler = () => {
             navigate('/admin/accounts');
         })
         .catch(error => {
-                toast.error('Error during POST request:', error);
+                toast.error(error.response.data.message);
               })
         .finally(()=>{
                 dispatch(hideLoader());

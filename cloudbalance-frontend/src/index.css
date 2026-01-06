@@ -8,9 +8,12 @@
 
 
 @keyframes bounce-height {
-  0%, 100% {
+
+  0%,
+  100% {
     height: 16px;
   }
+
   50% {
     height: 40px;
   }
@@ -21,33 +24,64 @@
 }
 
 /* Container for the entire custom tooltip */
+/* Update the wrapper to be pure white */
 .tooltip_wrapper.cudos_tooltip {
   min-width: 280px;
   font-family: "Source Sans Pro", sans-serif;
-  color: #5a5a5a;
+  color: #2e2e2e;
   line-height: 1.5;
+  background-color: #ffffff !important;
+  /* Changed to white */
+  padding: 10px;
 }
 
-/* The Date Header (e.g., Aug 2025) */
+/* Ensure the FusionCharts internal container is also white/transparent */
+.fc__tooltip {
+  padding: 10 !important;
+  /* Let your wrapper handle padding */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 4px !important;
+  background-color: #ffffff !important;
+  /* Changed to white */
+  border: 1px solid #d1d1d1 !important;
+  height: 300px;
+}
+
+/* Fix the header color (it was white on white) */
 .headingCont {
   font-weight: bold;
   font-size: 15px;
   padding-bottom: 8px;
   margin-bottom: 8px;
   border-bottom: 1px solid #e1e1e1;
-  color: #ffffff;
+  color: #2e2e2e;
+  /* Changed from white to dark */
 }
 
-/* Individual service rows */
 .tooltip_wrapper .row {
   display: flex;
   justify-content: space-between;
+  /* Pushes value to the right */
   align-items: center;
   padding: 4px 0;
-  width: 100%;
 }
 
-/* Service Name */
+
+
+.totalStyle {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e1e1e1;
+  font-weight: bold;
+  color: #2e2e2e;
+  position: absolute;
+  bottom: 3px;
+  width: 84%;
+  font-size: medium;
+}
+
 .tooltip_wrapper .row label {
   font-weight: 500;
   margin-right: 20px;
@@ -56,26 +90,8 @@
   text-overflow: ellipsis;
 }
 
-/* Cost and Percentage Value */
 .tooltip_wrapper .row b {
   font-weight: bold;
   white-space: nowrap;
 }
 
-/* The Footer/Total section */
-.totalStyle {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #ccc;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-/* Optional: Clean up FusionCharts default padding */
-.fc__tooltip {
-  padding: 10px !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-  border-radius: 4px !important;
-}

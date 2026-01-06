@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef} from 'react'
 import ArrowDown from '/arrow_down.svg'
-import { CostExploreList } from '../app/constant';
+import { CostExploreList } from '../../app/constant';
 
 const MoreBar = ({costGroups,handleGroupButton}) => {
   const [moreOpen, setMoreOpen] = useState(false);

@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom'
 const AddUserBoard = React.memo(() => {
     const location = useLocation();
     const editUser = location.state?.data;
-    const { user, handleChange, handleSubmit, fetchAccounts, accounts } = useUserhandler(editUser);
+    const { user, handleChange, handleCancel, handleSubmit, fetchAccounts, accounts } = useUserhandler(editUser);
     useEffect(() => {
         if (user.role === 'USER')
             fetchAccounts();
@@ -63,8 +63,8 @@ const AddUserBoard = React.memo(() => {
             </div>
             }
             <div className='flex gap-3 justify-end self-end w-1/2'>
-                <button className='w-1/3 bg-blue-400 my-12 p-3' type='submit' onClick={(e) => handleSubmit(e)}>Submit</button>
-                <button className='w-1/3 bg-blue-400 my-12 p-3' type='reset'>Reset</button>
+            <button className='w-1/3 bg-blue-400 my-12 p-3' onClick={()=>{handleCancel()}}>Cancel</button>
+            <button className='w-1/3 bg-blue-400 my-12 p-3' type='submit' onClick={(e) => handleSubmit(e)}>Submit</button>
             </div>
         </div>
     )

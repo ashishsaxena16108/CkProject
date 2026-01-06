@@ -8,23 +8,39 @@ const useCostReportHandler = () => {
   const [headers, setHeaders] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [chartData,setChartData] = useState({});
-  const [isLoading,setIsLoading] = useState(true);
-  const {id,role} = useSelector(state=>state.auth.user);
+  const [isLoading,setIsLoading] = useState(false);
+  const {role} = useSelector(state=>state.auth.user);
+  const {costaccounts}=useSelector(state=>state.accounts);
   const fetchReports = (groupby = 'Service') => {
     setIsLoading(true);
     const backendgroupby=groupby.toLowerCase().replace(' ','_');
-    fetchApi.get(`/${role==='ADMIN' || role==='READ_ONLY' ? 'admin':`user/${id}`}/reports?group_by=${backendgroupby}`)
+    fetchApi.get(`/${role==='ADMIN' || role==='READ_ONLY' ? 'admin':'user'}/reports?group_by=${backendgroupby}${costaccounts.length===0?'':`&accountIds=${costaccounts.join(',')}`}`)
       .then(response => {
       const { monthWise, groupWise } = response.data;
       transformGroupWiseData(groupby,groupWise,monthWise);
       const transformedGroup = transformMonthWiseData(monthWise);
       setChartData(transformedGroup);
       })
-      .catch(() => toast.error('Reports not loaded'))
+      .catch((error) => toast.error(error.response.data.message))
       .finally(()=>{
         setIsLoading(false);
       })
   }
+  const fetchFilterReports = (groupby = 'Service',filters) => {
+    setIsLoading(true);
+    const backendgroupby=groupby.toLowerCase().replace(' ','_');
+    fetchApi.post(`/${role==='ADMIN' || role==='READ_ONLY' ? 'admin':'user'}/reports?group_by=${backendgroupby}${costaccounts.length===0?'':`&accountIds=${costaccounts.join(',')}`}`,filters)
+      .then(response => {
+      const { monthWise, groupWise } = response.data;
+      transformGroupWiseData(groupby,groupWise,monthWise);
+      const transformedGroup = transformMonthWiseData(monthWise);
+      setChartData(transformedGroup);
+      })
+      .catch((error) => toast.error(error.response.data.message))
+      .finally(()=>{
+        setIsLoading(false);
+      })
+  } 
   const transformGroupWiseData = (groupby,groupWiseReport,monthWise) => {
     const headers = [];
     headers.push({ head: groupby, field: 'groupName' });
@@ -85,7 +101,7 @@ const useCostReportHandler = () => {
     .sort((a, b) => b[1] - a[1])
     .map(([name]) => name);
 
-  const topServices = sortedServices.slice(0, 5);
+  const topServices = sortedServices.slice(0, 4);
 
   // Step 3: Init data arrays
   topServices.forEach(s => {
@@ -120,43 +136,45 @@ const useCostReportHandler = () => {
   });
 
   const dataset = filteredEntries.map((entry, index) => {
-    const [service, data] = entry;
-    const isFirst = index === 0;
-    const isLast = index === filteredEntries.length - 1;
+  const [service, data] = entry;
+  const isFirst = index === 0;
+  const isLast = index === filteredEntries.length - 1;
 
-    return {
-      seriesName: service,
-      data: data.map(v => {
-        // 1. HEADER: Only include headingCont if it's the first dataset
-        const header = isFirst ? `<div class="headingCont">$label</div>` : '';
-
-        // 2. BODY: The row item (Service Name and Value)
-        const body = `
-          <span class="row">
+  return {
+    seriesName: service,
+    data: data.map((v, monthIdx) => {
+      const header = isFirst ? `<div class="headingCont">$label</div>` : '';
+      const currentTotal = categories[monthIdx].total;
+      // This "body" now handles every row, including "Others"
+      const body = `
+        <span class="row">
+          <div style="display: flex; align-items: center;">
             <label>$seriesName</label>
-            <b>$dataValue ($percentValue)</b>
-          </span>`;
+          </div>
+          <b>$dataValue (${Number(v*100/currentTotal).toFixed(2)}%)</b>
+        </span>`;
 
-        // 3. FOOTER: Only include totalStyle if it's the last dataset
-        const footer = isLast ? `
-          <div class="totalStyle">
-            <b>Total</b>
-            $total
-          </div>` : '';
+      // The footer should only contain the text "Total" and the value
+      // We remove the color box from here to keep it distinct
+      
+      const footer = isLast ? `
+        <div class="totalStyle">
+          <span>Total</span>
+          <b>$${Number(currentTotal).toLocaleString()}</b>
+        </div>` : '';
 
-        return {
-          value: v,
-          // Wrap in your tooltip_wrapper class
-          toolText: `
-            <div class="tooltip_wrapper cudos_tooltip">
-              ${header}
-              ${body}
-              ${footer}
-            </div>`
-        };
-      })
-    };
-  });
+      return {
+        value: v,
+        toolText: `
+          <div class="tooltip_wrapper cudos_tooltip">
+            ${header}
+            ${body}
+            ${footer}
+          </div>`
+      };
+    })
+  };
+});
 
   return {
     categories: [{ category: categories }],
@@ -165,7 +183,7 @@ const useCostReportHandler = () => {
 
 };
 
-  return { fetchReports, headers, tableData, chartData ,isLoading}
+  return { fetchReports, headers, tableData, chartData ,isLoading, fetchFilterReports}
 }
 
 
