@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 public record AccountDTO(
         Long id,
         @NotBlank(message = "ARN is required")
-        @Pattern(regexp = "^arn:[^:]+:[^:]+:[^:]+:(\\d{12}):.*$")
+        @Pattern(regexp = "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):[a-z0-9\\-]+:[a-z0-9\\-]*:(\\d{12}):(.+)$")
         String accountArn,
         @NotBlank(message = "Account Id is required")
         String accountId,

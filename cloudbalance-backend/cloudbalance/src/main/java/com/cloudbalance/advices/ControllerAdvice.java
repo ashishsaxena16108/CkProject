@@ -8,10 +8,13 @@ import com.cloudbalance.records.AddedAccountDTO;
 import com.cloudbalance.records.AddedUserDTO;
 import com.cloudbalance.records.ErrorResponseDTO;
 import com.cloudbalance.records.UserAuthDTO;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -64,17 +67,33 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid Credentials"));
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,String>> handleValidation(MethodArgumentNotValidException e){
+    public ResponseEntity<ErrorResponseDTO> handleValidation(MethodArgumentNotValidException e){
         Map<String,String> response = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach(error-> response.put(((FieldError) error)
                 .getField(),
                 error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(response);
+        String message = String.join("\n",response.entrySet().stream().map(entry->entry.getKey()+":"+entry.getValue()).toList());
+        return ResponseEntity.badRequest().body(new ErrorResponseDTO(message));
+    }
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(AuthorizationDeniedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolation(ConstraintViolationException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        for (ConstraintViolation<?> v : ex.getConstraintViolations()) {
+            errors.put(v.getPropertyPath().toString(), v.getMessage());
+        }
+        String message = String.join("\n",errors.entrySet().stream().map(entry->entry.getKey()+":"+entry.getValue()).toList());
+        return ResponseEntity.badRequest().body(new ErrorResponseDTO(message));
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDTO(
-                "An unexpected error occurred. Please try again later."
+                "An unexpected error occurred. Please try again later. Error:"+e.getMessage()
                 ));
     }
 }

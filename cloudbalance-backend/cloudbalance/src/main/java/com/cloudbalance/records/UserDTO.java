@@ -20,5 +20,5 @@ public record UserDTO(
         String email,
         @NotNull(message = "Role is mandatory")
         User.Role role,
-        List<Account> accounts) {
+        List<AccountDTO> accounts) {
 }

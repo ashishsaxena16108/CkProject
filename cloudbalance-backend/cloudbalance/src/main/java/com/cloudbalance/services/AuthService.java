@@ -1,12 +1,10 @@
 package com.cloudbalance.services;
 
+import com.cloudbalance.entities.Account;
 import com.cloudbalance.entities.SecurityUser;
 import com.cloudbalance.exceptions.InvalidRefreshTokenException;
 import com.cloudbalance.exceptions.RefreshTokenExpiredException;
-import com.cloudbalance.records.RefreshRequestDTO;
-import com.cloudbalance.records.RefreshTokenDTO;
-import com.cloudbalance.records.UserAuthDTO;
-import com.cloudbalance.records.UserCredential;
+import com.cloudbalance.records.*;
 import com.cloudbalance.utils.JwtUtil;
 import com.cloudbalance.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -37,7 +36,7 @@ public class AuthService {
             SecurityUser user = (SecurityUser) authentication.getPrincipal();
             String refreshToken= user.getFirstName()+"refresh"+user.getEmail();
             redisUtil.set(userCredential.email(),refreshToken);
-            return new UserAuthDTO(user
+            return new UserAuthDTO(new UserDTO(user.getId(),user.getFirstName(),user.getLastName(),user.getEmail(),user.getRole(), user.getAccounts())
                     ,"Successfully Authenticated"
                     , jwtUtil.generateToken(userCredential.email(), user.getRole()), passwordEncoder.encode(refreshToken));
            }
