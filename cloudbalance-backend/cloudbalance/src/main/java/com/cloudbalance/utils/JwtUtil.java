@@ -19,7 +19,8 @@ import java.util.function.Function;
 public class JwtUtil{
     @Value("${jwt.secret}")
     private String secret;
-
+    @Value(("${jwt.duration}"))
+    private Long duration;
     public String generateToken(String username, User.Role role){
         Map<String, Object> claims = new HashMap<>();
         claims.put("role",role.name());
@@ -27,7 +28,7 @@ public class JwtUtil{
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+15*60*1000))
+                .expiration(new Date(System.currentTimeMillis()+duration))
                 .signWith(signKey(),Jwts.SIG.HS256)
                 .compact();
     }
