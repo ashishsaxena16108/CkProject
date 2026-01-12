@@ -114,7 +114,7 @@ export const pathTitleMap = new Map([['adduser','Add New User'],
 
 export const resourcesListMap = new Map([['EC2',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Region',field:'region'},{head:'Status',field:'status'}]],['ASG',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Region',field:'region'},{head:'Desired Capacity',field:'desiredCapacity'},{head:'Min Size',field:'minSize'},{head:'Max Size',field:'maxSize'},{head:'Status',field:'status'}]],['RDS',[{head:'Resource ID',field:'resourceId'},{head:'Resource Name',field:'resourceName'},{head:'Engine',field:'engine'},{head:'Region',field:'region'},{head:'Status',field:'status'}]]]);
 
-export const CostExploreList = ['Service','Instance Type','Account ID','Usage Type','Platform','Region','Purchase Option','Usage Type Group','API Operation','Resource','Availabilityzone','Tenancy','Legal Entity','Billing Entity'];
+export const CostExploreList = ['Service','Instance Type','Account ID','Usage Type','Platform','Region','Purchase Option','Usage Type Group','API Operation','Resource','Availability Zone','Tenancy','Legal Entity','Billing Entity'];
 
 
 export const dateConstant = {

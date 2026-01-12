@@ -10,7 +10,7 @@ const Chart = ({type,width,data}) => {
     const { categories, dataset } = data;
 
     if (dataset?.length === 0) {
-        return <div>No data available to render the chart.</div>;
+        return <div className='flex items-center justify-center mt-30'>No data available to render the chart.</div>;
     }
 
     const chartConfigs = {

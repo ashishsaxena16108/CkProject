@@ -1,10 +1,12 @@
 import React, { useState,useEffect,useRef } from 'react'
 import { dateConstant } from '../app/constant';
+import { useDispatch } from 'react-redux';
+import { setdates } from '../app/feature/accountReducer';
 
 const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',year:2025}}) => {
     const [open, setOpen] = useState(false);
     const [startDate, setStartDate] = useState(start);
-
+    const dispatch = useDispatch();
     const [endDate, setEndDate] = useState(end);
     const pickerRef = useRef(null);
     useEffect(() => {
@@ -33,6 +35,14 @@ const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',y
     const handleDropdownClick = (e) => {
         e.stopPropagation();
     };
+    const handleApply = ()=>{
+        dispatch(setdates({startDate:`${startDate.year}-${dateConstant.months.indexOf(startDate.month)+1}-${startDate.day}`,endDate:`${endDate.year}-${dateConstant.months.indexOf(endDate.month)+1}-${endDate.day}`}));
+    };
+    const handleReset = ()=>{
+        dispatch(setdates({startDate:'',endDate:''}));
+        setStartDate(start);
+        setEndDate(end);
+    }
     return (
         <div className='relative'>
             <div onClick={() => setOpen(!open)} className='text-xs flex items-center justify-center bg-white rounded p-3 border border-gray-200'>
@@ -41,6 +51,7 @@ const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',y
             <div ref={pickerRef} className={`${open ? 'opacity-100 duration-200' : 'opacity-0 duration-100 pointer-events-none'} 
             absolute top-full left-1/12 -translate-x-1/2 w-80
             bg-white shadow-xl rounded p-4 z-10 mt-1 flex flex-col justify-center items-center gap-3 border border-gray-300`}>
+                <button className='text-xs self-end text-blue-900' onClick={()=>handleReset()}>Clear Selection</button>
                 <div className='flex gap-2'>Start Date:
                     <select name="day" id=""  onChange={(e) => handleChange(e, 'start')} onClick={handleDropdownClick} value={startDate.day}>
                         {dateConstant.days.map((day) => {
@@ -78,7 +89,7 @@ const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',y
                 </div>
                 <div className='self-end'>
                 <button onClick={()=>setOpen(false)} className=' text-blue-800 rounded p-1 border border-blue-800 mx-4'>Cancel</button>
-                <button className=' bg-blue-800 rounded p-1 text-white mx-4'>Apply</button>
+                <button className=' bg-blue-800 rounded p-1 text-white mx-4' onClick={()=>handleApply()}>Apply</button>
                 </div>
             </div>
         </div>

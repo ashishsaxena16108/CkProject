@@ -9,7 +9,7 @@ const ActionData = ({data}) => {
   return (
     <>
     {role==='ADMIN' ? <div className='flex justify-center gap-10'>
-        <Link to='/admin/adduser' state={{data:data}}><img src={Edit} alt="edit"/></Link><img src={Delete} alt="delete" /> 
+        <Link to='/admin/adduser' state={{data:data}}><img src={Edit} alt="edit"/></Link>
     </div>:<div></div>
     }
     </>

@@ -2,32 +2,25 @@ import { createSlice } from "@reduxjs/toolkit"
 
 
 const initialState = {
-    costaccounts:[],
-    resourceaccounts:[]
+    accounts:[],
+    startDate:'',
+    endDate:''
 }
 
 const accountSlice = createSlice({
     name:'accounts',
     initialState,
     reducers:{
-        setcostaccount:(state,action)=>{
-            state.costaccounts=action.payload;
+        setaccounts:(state,action)=>{
+            state.accounts=action.payload;
         },
-        addcostAccount:(state,action)=>{
-           state.costaccounts=[...state.costaccounts,action.payload.account];
-        },
-        removecostAccount:(state,action)=>{
-            state.costaccounts=state.costaccounts.filter((a)=>a!==action.payload.accountId);
-        },
-        addresourceAccount:(state,action)=>{
-            state.resourceaccounts=[...state.resourceaccounts,action.payload.account];
-        },
-        removeresourceAccount:(state,action)=>{
-            state.resourceaccounts=state.resourceaccounts.filter((a=>a!==action.payload.accountId));
+        setdates:(state,action)=>{
+            state.startDate=action.payload.startDate;
+            state.endDate=action.payload.endDate;
         }
     }
 })
 
-export const {setcostaccount,addcostAccount,removecostAccount,addresourceAccount,removeresourceAccount} = accountSlice.actions;
+export const {setaccounts,setdates} = accountSlice.actions;
 
 export default accountSlice.reducer;

@@ -5,7 +5,8 @@ import Filter from '/filter.svg'
 const Table = ({ tableData, headers, headStyle='bg-blue-800 text-white',maxHeight='60vh' }) => {
   
   const numCols = headers.length;
- 
+  if(tableData.length===0)
+    return <div className='flex justify-center items-center m-10 font-light text-gray-400'>Table Data is not available to show</div>
   
   return (
     <div className="w-full border border-gray-200 overflow-hidden text-sm">

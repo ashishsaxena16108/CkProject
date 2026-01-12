@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
 export const fetchApi = axios.create({
@@ -16,6 +17,7 @@ fetchApi.interceptors.request.use(async(config) => {
     return config;
   },
   (error) => {
+    console.log("the error is this",error)
     return Promise.reject(error);
   }
 )
@@ -26,9 +28,8 @@ fetchApi.interceptors.response.use(
   },
  async (error) => {
     const originalRequest = error.config;
-    if (!error.response) {
-      console.error('Network error or server unreachable');
-      window.location.href = '/login';
+    if (error.message==='Network Error') {
+      error.response={data:{message:'Network error or server unreachable.Please try again later.'}};
       return Promise.reject(error);
     }
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -39,7 +40,7 @@ fetchApi.interceptors.response.use(
           baseURL: backendUrl,
         });
 
-        const newAccessToken = response.data.accessToken;
+        const newAccessToken = await response.data.accessToken;
 
         localStorage.setItem('jwtToken', newAccessToken);
 
@@ -48,12 +49,12 @@ fetchApi.interceptors.response.use(
         return fetchApi(originalRequest);
 
       } catch (refreshError) {
-        console.error('Refresh token failed. User must log in again.');
+        error.response={data:{message:'Refresh Token is expired.Please Log In Again'}};
+        toast.error('Refresh Token is expired.Please Log In Again');
         window.location.href='/login';
         return Promise.reject(refreshError);
       }
     }
-    window.location.href = '/login';
-    console.error(error);
+    
     return Promise.reject(error);
   })

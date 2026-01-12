@@ -4,16 +4,17 @@ import SectionLoader from './SectionLoader';
 import { fetchApi } from '../../axios/admin/fetch';
 import { useSelector } from 'react-redux';
 
-const Filter = ({ item,open,index,setIndex,fetchFilterReports }) => {
+const Filter = ({ item,open,index,setIndex,fetchReports }) => {
   const [filters, setFilters] = useState([]);
   const [checkedFilters,setCheckedFilters] = useState([]);
   const [isLoading,setIsLoading] = useState(false);
   const {role} = useSelector(state=>state.auth.user);
+  const {accounts} = useSelector(state=>state.accounts);
   const clickHandler = () => {
     setIndex(open?-1:index);
     setIsLoading(true);
     const backendgroupby=item.toLowerCase().replace(' ','_');
-    fetchApi.get(`/${role==='ADMIN'||role==='READ_ONLY'?'admin':'user'}/filters?group_by=${backendgroupby}`)
+    fetchApi.get(`/${role==='ADMIN'||role==='READ_ONLY'?'admin':'user'}/filters?group_by=${backendgroupby}${accounts.length===0?'':`&accountIds=${accounts.join(',')}`}`)
     .then(response=>{
        setFilters(response.data);
     })
@@ -22,7 +23,7 @@ const Filter = ({ item,open,index,setIndex,fetchFilterReports }) => {
     })
   }
   const handleApply = ()=>{
-     fetchFilterReports(item,checkedFilters);
+     fetchReports(item,checkedFilters);
      setIndex(-1);
      setCheckedFilters([]);
   }
@@ -33,7 +34,6 @@ const Filter = ({ item,open,index,setIndex,fetchFilterReports }) => {
      else{
        setCheckedFilters(checkedFilters.filter(item=>item!==value))
      }
-      console.log(checkedFilters);
   }
   return (
     <div className={`${open ? 'shadow-lg border-2 rounded border-gray-100' : ''} p-2`}>

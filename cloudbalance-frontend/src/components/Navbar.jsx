@@ -6,10 +6,13 @@ import Logout from '/logout.svg'
 import Menu from '/menu.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../app/feature/authReducer'
+import MultipleAccountSelection from './MultipleAccountSelection'
+import { useLocation } from 'react-router-dom'
 const Navbar = ({ handleBtn }) => {
   const dispatch = useDispatch();
   const user = useSelector(state=>state.auth.user);
   const [isHover, setIsHover] = useState(false);
+  const location = useLocation();
   const handleLogout = () => {
     dispatch(logout());
   }
@@ -19,8 +22,15 @@ const Navbar = ({ handleBtn }) => {
         <img className='mx-3' src={CloudLogo} alt="" width={200} />
       </div>
       <div className='w-6/7 flex justify-between'>
-        <div className='flex items-center' onClick={()=>handleBtn()}>
+        <div className='flex items-center gap-6' >
+          <div onClick={()=>handleBtn()}>
           <img src={Menu} alt="" />
+          </div>
+         {(location.pathname.includes('resources')|| location.pathname.includes('costexplorer'))&&<MultipleAccountSelection/>}
+        </div>
+        
+        <div>
+          
         </div>
         <div className='w-1/4 p-5 flex justify-between items-center'>
           <div className='flex items-center gap-1.5'>

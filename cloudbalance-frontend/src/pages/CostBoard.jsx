@@ -14,15 +14,15 @@ import FilterSection from '../components/costexplorercomponents/FilterSection';
 import { useSelector } from 'react-redux';
 
 const CostBoard = () => {
-  const {fetchReports,fetchFilterReports,headers,tableData,chartData,isLoading} = useCostReportHandler();
+  const {fetchReports,headers,tableData,chartData,isLoading} = useCostReportHandler();
   const [costGroup, setCostGroup] = useState(CostExploreList[0]);
   const [costGroups,setCostGroups] = useState(CostExploreList.filter((item)=>item!==costGroup));
   const [filterOpen, setFilterOpen] = useState(false);
   const [chartType,setChartType] = useState('mscolumn2d');
-  const {costaccounts}=useSelector(state=>state.accounts);
+  const {accounts,startDate,endDate}=useSelector(state=>state.accounts);
   useEffect(() => {
     fetchReports(costGroup);
-  }, [costaccounts]);
+  }, [accounts,startDate,endDate]);
   useEffect(()=>{
     console.log('Data Changed');
   },[chartData,tableData]);
@@ -72,7 +72,7 @@ const CostBoard = () => {
           </div>
         </div>
         
-        <FilterSection fetchFilterReports={fetchFilterReports} filterOpen={filterOpen}/>
+        <FilterSection fetchReports={fetchReports} filterOpen={filterOpen}/>
       </div>
     </div>
   )

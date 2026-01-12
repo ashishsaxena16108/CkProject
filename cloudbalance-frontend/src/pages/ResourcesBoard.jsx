@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { resourcesListMap } from '../app/constant'
 import Table from '../components/Table'
+import MultipleAccountSelection from '../components/MultipleAccountSelection'
 
 const ResourcesBoard = () => {
-  const [resource, setResource] = useState(resourcesListMap.keys().next().value)
+  const [resource, setResource] = useState(resourcesListMap.keys().next().value);
   return (
     <div>
-        <div className='flex gap-3 m-4 text-xl'>
+        <div className='flex gap-3 m-4 text-xl w-full'>
             {resourcesListMap.keys().map((item,index)=>{
                 let isActive=false;
                 if(resource===item)
