@@ -44,14 +44,16 @@ public class UserController {
     public ResponseEntity<List<String>> getUserFilters(@RequestParam(defaultValue = "service",name="group_by")String groupBy,
                                                        @RequestParam(name = "accountIds",required = false)
                                                        List<
-                                                               @Pattern(regexp = "^\\d{12}$", message = "Invalid AWS accountId")
-                                                                       String> accountIds,
+                                                               @Pattern(regexp = "^\\d{12}$"
+                                                                       , message = "Invalid AWS accountId"
+                                                               )String> accountIds,
                                                        @AuthenticationPrincipal SecurityUser user){
         return ResponseEntity.ok(userService.getFilters(user,groupBy,accountIds));
     }
     @GetMapping("/resources")
-    public ResponseEntity<ResourceDTO> getResources(@RequestParam(name = "accountIds",required = false)List<
-            @Pattern(regexp = "^\\d{12}$", message = "Invalid AWS accountId")String> accountIds,@AuthenticationPrincipal SecurityUser user){
-        return ResponseEntity.ok(userService.getResources(accountIds,user));
+    public ResponseEntity<ResourceDTO> getResources(@RequestParam(name = "accountArns",required = false)List<
+            @Pattern(regexp = "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):[a-z0-9\\-]+:[a-z0-9\\-]*:(\\d{12}):(.+)$", message = "Invalid AWS account arn")String> accountArns
+            ,@AuthenticationPrincipal SecurityUser user){
+        return ResponseEntity.ok(userService.getResources(accountArns,user));
     }
 }

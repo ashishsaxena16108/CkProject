@@ -1,5 +1,6 @@
 package com.cloudbalance.controllers;
 
+import com.cloudbalance.records.LogOutDTO;
 import com.cloudbalance.records.RefreshRequestDTO;
 import com.cloudbalance.records.UserAuthDTO;
 import com.cloudbalance.records.UserCredential;
@@ -22,5 +23,10 @@ public class AuthController {
    @PostMapping("/refresh-token")
     public ResponseEntity<Object> refreshToken(@Valid @RequestBody RefreshRequestDTO requestDTO){
        return new ResponseEntity<>(authService.refreshToken(requestDTO),HttpStatus.OK);
+   }
+   @PostMapping("/logout")
+    public ResponseEntity<Object> logout(@RequestBody LogOutDTO log){
+       authService.logout(log);
+       return ResponseEntity.ok("Logout Successfully");
    }
 }

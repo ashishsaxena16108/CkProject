@@ -1,17 +1,17 @@
 package com.cloudbalance.advices;
 
-import com.cloudbalance.exceptions.DuplicateAccountException;
-import com.cloudbalance.exceptions.DuplicateUserException;
-import com.cloudbalance.exceptions.InvalidRefreshTokenException;
-import com.cloudbalance.exceptions.RefreshTokenExpiredException;
+import com.cloudbalance.exceptions.*;
 import com.cloudbalance.records.AddedAccountDTO;
 import com.cloudbalance.records.AddedUserDTO;
 import com.cloudbalance.records.ErrorResponseDTO;
 import com.cloudbalance.records.UserAuthDTO;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -75,6 +75,14 @@ public class ControllerAdvice {
         String message = String.join("\n",response.entrySet().stream().map(entry->entry.getKey()+":"+entry.getValue()).toList());
         return ResponseEntity.badRequest().body(new ErrorResponseDTO(message));
     }
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponseDTO> handleWrongJwtException(MalformedJwtException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponseDTO> handleJwtExpiredException(ExpiredJwtException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
+    }
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(AuthorizationDeniedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
@@ -89,6 +97,26 @@ public class ControllerAdvice {
         }
         String message = String.join("\n",errors.entrySet().stream().map(entry->entry.getKey()+":"+entry.getValue()).toList());
         return ResponseEntity.badRequest().body(new ErrorResponseDTO(message));
+    }
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> getInvalidArgument(InvalidArgumentException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(InvalidGroupByException.class)
+    public ResponseEntity<ErrorResponseDTO> getInvalidField(InvalidGroupByException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(NoAccountsAssignedException.class)
+    public ResponseEntity<ErrorResponseDTO> getNoAccounts(NoAccountsAssignedException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(JwtLoggedOutException.class)
+    public ResponseEntity<ErrorResponseDTO> getJWTLoggedOut(JwtLoggedOutException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDTO> handleHttpMessageError(HttpMessageNotReadableException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {

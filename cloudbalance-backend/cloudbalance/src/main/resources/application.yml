@@ -23,6 +23,6 @@ jwt:
   secret: ${JWT_SECRET}
   duration: 900000
 
-# logging:
+#logging:
 #   level:
 #     org.springframework.security: DEBUG

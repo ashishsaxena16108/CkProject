@@ -1,12 +1,12 @@
 package com.cloudbalance.services;
 
-import com.cloudbalance.entities.Account;
 import com.cloudbalance.entities.SecurityUser;
 import com.cloudbalance.exceptions.InvalidRefreshTokenException;
 import com.cloudbalance.exceptions.RefreshTokenExpiredException;
 import com.cloudbalance.records.*;
 import com.cloudbalance.utils.JwtUtil;
 import com.cloudbalance.utils.RedisUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.Duration;
+import java.util.Date;
 
 
 @Service
@@ -51,5 +52,21 @@ public class AuthService {
         if(passwordEncoder.matches(fetchedRefreshToken,requestDTO.refreshToken()))
             return new RefreshTokenDTO(jwtUtil.generateToken(requestDTO.email(),requestDTO.role()));
         throw new InvalidRefreshTokenException("Refresh Token is Invalid");
+   }
+   public void logout(LogOutDTO log){
+       redisUtil.delete(log.email());
+       String token = log.accessToken();
+       Date expiration;
+       try {
+           expiration = jwtUtil.extractExpiration(token);
+       } catch (ExpiredJwtException e) {
+           return;
+       }
+
+       long ttlMillis = expiration.getTime() - System.currentTimeMillis();
+       if (ttlMillis <= 0) {
+           return;
+       }
+       redisUtil.set(token, "true", Duration.ofMillis(ttlMillis));
    }
 }

@@ -4,6 +4,8 @@ package com.cloudbalance.services;
 import com.cloudbalance.entities.*;
 import com.cloudbalance.exceptions.DuplicateAccountException;
 import com.cloudbalance.exceptions.DuplicateUserException;
+import com.cloudbalance.exceptions.InvalidArgumentException;
+import com.cloudbalance.exceptions.InvalidGroupByException;
 import com.cloudbalance.records.AccountDTO;
 import com.cloudbalance.records.CostReportDTO;
 import com.cloudbalance.records.ResourceDTO;
@@ -40,7 +42,7 @@ public class AdminService {
                 .toList();
     }
     @Transactional
-    public User addUser(UserDTO userDTO){
+    public User addUser(UserDTO userDTO,SecurityUser currentUser){
         User newOrExistingUser;
         if (userDTO.id() == null) {
             if(userRepository.existsByEmail(userDTO.email()))
@@ -60,9 +62,12 @@ public class AdminService {
             newOrExistingUser = userRepository.findById(userDTO.id())
                     .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userDTO.id()));
             newOrExistingUser.setLastName(userDTO.lastName());
+            newOrExistingUser.setFirstName(userDTO.firstName());
+            if(Objects.equals(currentUser.getId(), userDTO.id()) && (!Objects.equals(currentUser.getEmail(), userDTO.email()) || currentUser.getRole().equals(userDTO.role()))){
+                throw new InvalidArgumentException("Admin cannot change its own role and email");
+            }
             newOrExistingUser.setEmail(userDTO.email());
             newOrExistingUser.setRole(userDTO.role());
-            newOrExistingUser.setFirstName(userDTO.firstName());
         }
         if(userDTO.accounts() != null){
             if (userDTO.role() == User.Role.USER) {
@@ -92,6 +97,8 @@ public class AdminService {
     }
 
     public CostReportDTO getReports(String groupBy,List<String> accountIds,List<String> filterValues,String startDate,String endDate){
+        if(!Field.contains(groupBy))
+            throw new InvalidGroupByException("Invalid field");
         boolean isAccountIdsNotPresent = PredicateUtil.isValuesNotPresent.test(accountIds);
         boolean isFiltersNotPresent = PredicateUtil.isValuesNotPresent.test(filterValues);
         if(isAccountIdsNotPresent && isFiltersNotPresent)
@@ -104,6 +111,8 @@ public class AdminService {
     }
 
     public List<String> getFilters(String groupBy,List<String> accountIds){
+        if(!Field.contains(groupBy))
+            throw new InvalidGroupByException("Invalid field");
         boolean isAccountIdsNotPresent = PredicateUtil.isValuesNotPresent.test(accountIds);
         if(isAccountIdsNotPresent)
             return snowUtil.getFiltersByGroup(groupBy);

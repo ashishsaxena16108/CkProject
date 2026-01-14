@@ -1,9 +1,8 @@
 package com.cloudbalance.services;
 
-import com.cloudbalance.entities.ASGInstance;
-import com.cloudbalance.entities.EC2Instance;
-import com.cloudbalance.entities.RDSInstance;
-import com.cloudbalance.entities.SecurityUser;
+import com.cloudbalance.entities.*;
+import com.cloudbalance.exceptions.InvalidGroupByException;
+import com.cloudbalance.exceptions.NoAccountsAssignedException;
 import com.cloudbalance.records.AccountDTO;
 import com.cloudbalance.records.CostReportDTO;
 import com.cloudbalance.records.ResourceDTO;
@@ -11,7 +10,6 @@ import com.cloudbalance.repositories.UserRepository;
 import com.cloudbalance.utils.AwsUtil;
 import com.cloudbalance.utils.PredicateUtil;
 import com.cloudbalance.utils.SnowUtil;
-import com.snowflake.snowpark_java.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -19,7 +17,6 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -30,6 +27,10 @@ public class UserService {
     private final AwsUtil awsUtil;
 
     public CostReportDTO getUserReports(SecurityUser user, String groupBy,List<String> filterValues,List<String> accountIds,String startDate,String endDate){
+        if(!Field.contains(groupBy))
+            throw new InvalidGroupByException("Invalid field");
+        if(user.getAccounts().isEmpty())
+            throw new NoAccountsAssignedException("No AWS Accounts have been assigned yet.");
         boolean isAccountIdsNotPresent = PredicateUtil.isValuesNotPresent.test(accountIds);
         boolean isFiltersNotPresent = PredicateUtil.isValuesNotPresent.test(filterValues);
         if(isAccountIdsNotPresent && isFiltersNotPresent)
@@ -42,6 +43,10 @@ public class UserService {
         return snowUtil.getFilterDataByGroup(groupBy,accountIds,filterValues,startDate,endDate);
     }
     public List<String> getFilters(SecurityUser user, String groupBy,List<String> accountIds){
+        if(user.getAccounts().isEmpty())
+            throw new NoAccountsAssignedException("No AWS Accounts have been assigned yet.");
+        if(!Field.contains(groupBy))
+            throw new InvalidGroupByException("Invalid field");
         boolean isAccountIdsNotPresent = PredicateUtil.isValuesNotPresent.test(accountIds);
         if(isAccountIdsNotPresent)
             return snowUtil.getFiltersByGroup(groupBy,user.getAccounts().stream().map(AccountDTO::accountId).toList());

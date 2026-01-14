@@ -1,5 +1,6 @@
 package com.cloudbalance.controllers;
 
+import com.cloudbalance.entities.SecurityUser;
 import com.cloudbalance.records.*;
 import com.cloudbalance.services.AdminService;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,20 +24,20 @@ public class AdminController {
     @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(){
-        return new ResponseEntity<>(adminService.getAllUsers(),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(adminService.getAllUsers(),HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/add-user")
-    public ResponseEntity<AddedUserDTO> addUser(@Valid @RequestBody UserDTO user){
-        return new ResponseEntity<>(new AddedUserDTO(adminService.addUser(user),
+    public ResponseEntity<AddedUserDTO> addUser(@Valid @RequestBody UserDTO user, @AuthenticationPrincipal SecurityUser currentUser){
+        return new ResponseEntity<>(new AddedUserDTO(adminService.addUser(user,currentUser),
                 user.id()==null?"User Successfully Added":"User Updated Successfully"), HttpStatus.CREATED);
     }
 
     @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
     @GetMapping("/accounts")
     public ResponseEntity<List<AccountDTO>> getAllAccounts(){
-        return new ResponseEntity<>(adminService.getAllAccounts(),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(adminService.getAllAccounts(),HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
@@ -74,8 +76,8 @@ public class AdminController {
     }
     @Secured({"ROLE_ADMIN","ROLE_READ_ONLY"})
     @GetMapping("/resources")
-    public ResponseEntity<ResourceDTO> getResources(@RequestParam(name = "accountIds",required = false)List<
-            @Pattern(regexp = "^\\d{12}$", message = "Invalid AWS accountId")String> accountIds){
-        return ResponseEntity.ok(adminService.getResources(accountIds));
+    public ResponseEntity<ResourceDTO> getResources(@RequestParam(name = "accountArns",required = false)List<
+            @Pattern(regexp = "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):[a-z0-9\\-]+:[a-z0-9\\-]*:(\\d{12}):(.+)$", message = "Invalid AWS account arn")String> accountArns){
+        return ResponseEntity.ok(adminService.getResources(accountArns));
     }
 }

@@ -52,62 +52,113 @@ public class AwsUtil {
            ));
        }
    }
-   public List<EC2Instance> getEC2Instances(AwsCredentialsProvider credentialsProvider){
-       DescribeInstancesResponse response;
-       try(Ec2Client ec2 = Ec2Client.builder()
-               .region(Region.AWS_GLOBAL)
-               .credentialsProvider(credentialsProvider)
-               .build()) {
-           response = ec2.describeInstances();
-       }
-       List<EC2Instance> instancesData = new ArrayList<>();
-       for(Reservation reservation : response.reservations()){
-           for(Instance instance : reservation.instances()){
-               instancesData.add(new EC2Instance(instance.instanceId()
-                       ,instance.tags().stream().filter(t->t.key().equals("Name"))
-                       .findFirst()
-                       .map(Tag::value)
-                       .orElse("Untitled")
-               ,instance.placement().availabilityZone()
-               ,instance.state().nameAsString()));
-           }
-       }
-       return instancesData;
-   }
+    public List<EC2Instance> getEC2Instances(AwsCredentialsProvider credentialsProvider) {
+
+        List<EC2Instance> instancesData = new ArrayList<>();
+
+        // 1️⃣ Get all available regions
+        List<Region> regions;
+        try (Ec2Client ec2Global = Ec2Client.builder()
+                .region(Region.US_EAST_1)
+                .credentialsProvider(credentialsProvider)
+                .build()) {
+
+            regions = ec2Global.describeRegions().regions().stream()
+                    .map(r -> Region.of(r.regionName()))
+                    .toList();
+        }
+
+        for (Region region : regions) {
+
+            DescribeInstancesResponse response;
+
+            try (Ec2Client ec2 = Ec2Client.builder()
+                    .region(region)
+                    .credentialsProvider(credentialsProvider)
+                    .build()) {
+
+                response = ec2.describeInstances();
+            }
+
+            for (Reservation reservation : response.reservations()) {
+                for (Instance instance : reservation.instances()) {
+                    instancesData.add(new EC2Instance(
+                            instance.instanceId(),
+                            instance.tags().stream()
+                                    .filter(t -> t.key().equals("Name"))
+                                    .findFirst()
+                                    .map(Tag::value)
+                                    .orElse("Untitled"),
+                            instance.placement().availabilityZone(),
+                            instance.state().nameAsString()
+                    ));
+                }
+            }
+        }
+
+        return instancesData;
+    }
+
    public List<RDSInstance> getRDSInstances(AwsCredentialsProvider awsCredentialsProvider){
-       DescribeDbInstancesResponse response;
-       try (RdsClient rds = RdsClient.builder()
-               .region(Region.AWS_GLOBAL)
+       List<RDSInstance> dbInstances = new ArrayList<>();
+       List<Region> regions;
+
+       try (Ec2Client ec2Global = Ec2Client.builder()
+               .region(Region.US_EAST_1)
                .credentialsProvider(awsCredentialsProvider)
                .build()) {
-           response = rds.describeDBInstances();
+
+           regions = ec2Global.describeRegions().regions().stream()
+                   .map(r -> Region.of(r.regionName()))
+                   .toList();
        }
-       List<RDSInstance> dbInstances = new ArrayList<>();
-       for(DBInstance instance : response.dbInstances()){
-            dbInstances.add(new RDSInstance(instance.dbiResourceId()
-            ,instance.dbName()
-            ,instance.engine()
-            , instance.availabilityZone(),
-                    instance.dbInstanceStatus()));
+       for(Region region :regions) {
+           DescribeDbInstancesResponse response;
+           try (RdsClient rds = RdsClient.builder()
+                   .region(region)
+                   .credentialsProvider(awsCredentialsProvider)
+                   .build()) {
+               response = rds.describeDBInstances();
+           }
+
+           for (DBInstance instance : response.dbInstances()) {
+               dbInstances.add(new RDSInstance(instance.dbiResourceId()
+                       , instance.dbName()
+                       , instance.engine()
+                       , instance.availabilityZone(),
+                       instance.dbInstanceStatus()));
+           }
        }
        return dbInstances;
    }
    public List<ASGInstance> getASGInstances(AwsCredentialsProvider awsCredentialsProvider){
-       DescribeAutoScalingGroupsResponse response;
-       try (AutoScalingClient asg = AutoScalingClient.builder()
-               .region(Region.AWS_GLOBAL)
+       List<Region> regions;
+       List<ASGInstance> asgInstances = new ArrayList<>();
+       try (Ec2Client ec2Global = Ec2Client.builder()
+               .region(Region.US_EAST_1)
                .credentialsProvider(awsCredentialsProvider)
                .build()) {
-           response = asg.describeAutoScalingGroups();
+
+           regions = ec2Global.describeRegions().regions().stream()
+                   .map(r -> Region.of(r.regionName()))
+                   .toList();
        }
-       List<ASGInstance> asgInstances = new ArrayList<>();
-       for(AutoScalingGroup instance : response.autoScalingGroups()){
-           asgInstances.add(new ASGInstance(instance.autoScalingGroupARN()
-           ,instance.launchConfigurationName(),instance.availabilityZones().get(0)
-           ,instance.desiredCapacity().toString()
-           ,instance.minSize().toString()
-           ,instance.maxSize().toString()
-                   ,instance.status()));
+       for(Region region :regions) {
+           DescribeAutoScalingGroupsResponse response;
+           try (AutoScalingClient asg = AutoScalingClient.builder()
+                   .region(Region.US_EAST_1)
+                   .credentialsProvider(awsCredentialsProvider)
+                   .build()) {
+               response = asg.describeAutoScalingGroups();
+           }
+           for (AutoScalingGroup instance : response.autoScalingGroups()) {
+               asgInstances.add(new ASGInstance(instance.autoScalingGroupARN()
+                       , instance.launchConfigurationName(), instance.availabilityZones().get(0)
+                       , instance.desiredCapacity().toString()
+                       , instance.minSize().toString()
+                       , instance.maxSize().toString()
+                       , instance.status()));
+           }
        }
        return asgInstances;
    }
