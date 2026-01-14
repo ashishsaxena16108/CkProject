@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setaccounts } from '../app/feature/accountReducer';
 import ArrowDown from '/arrow_down.svg'
-import { fetchApi } from '../axios/admin/fetch';
+import { fetchApi } from '../axios/fetch';
 import { toast } from 'react-toastify';
 const MultipleAccountSelection = () => {
   const [selectedAccounts, setSelectedAccounts] = useState([]);
@@ -29,7 +29,7 @@ const MultipleAccountSelection = () => {
       setSelectedAccounts([...selectedAccounts, value]);
     }
     else {
-      setSelectedAccounts(selectedAccounts => selectedAccounts.filter(a => a !== value));
+      setSelectedAccounts(selectedAccounts => selectedAccounts.filter(a => a.accountId !== value.accountId));
     }
   }
   const handleApply = () => {
@@ -37,7 +37,7 @@ const MultipleAccountSelection = () => {
   }
   const handleAll = (checked)=>{
     if(checked){
-      setSelectedAccounts([...allAccounts.map((a)=>a.accountId)]);
+      setSelectedAccounts([...allAccounts]);
     }
     else{
       setSelectedAccounts([]);
@@ -49,16 +49,16 @@ const MultipleAccountSelection = () => {
         Accounts <img src={ArrowDown} alt="" />
       </div>
       {showData && <div className='flex flex-col text-xs absolute bg-gray-100 top-13 shadow-lg inset-shadow-lg rounded'>
-        <div className='flex flex-col text-gray-600 h-48 overflow-auto'>
+        <div className='flex flex-col text-gray-600 max-h-48  min-w-32 overflow-auto'>
           <div className='flex items-center gap-3 m-2'>
           <input className='h-4 w-4 bg-transparent checked:accent-gray-100  hover:accent-gray-100' type="checkbox"
             checked={selectedAccounts.length === allAccounts.length }
             onChange={(e) => handleAll(e.target.checked)} /><div>Select All</div></div>
           {allAccounts.map((a) => {
             return <div className='flex items-center gap-3 m-2' key={a.accountId}>
-              <input className='h-4 w-4 bg-transparent checked:accent-gray-100  hover:accent-gray-100' type="checkbox" name={a.accountId} id={a.accountId} value={a.accountId}
-                checked={selectedAccounts.includes(a.accountId)}
-                onChange={(e) => handleChange(a.accountId, e.target.checked)} />
+              <input className='h-4 w-4 bg-transparent checked:accent-gray-100  hover:accent-gray-100' type="checkbox" name={a.accountId} id={a.accountId} value={a}
+                checked={selectedAccounts.includes(a)}
+                onChange={(e) => handleChange(a, e.target.checked)} />
               <div>{a.accountName}({a.accountId})</div></div>
           })}
         </div>

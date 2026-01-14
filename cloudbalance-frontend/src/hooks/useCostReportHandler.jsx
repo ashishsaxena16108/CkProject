@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { fetchApi } from '../axios/admin/fetch';
+import { fetchApi } from '../axios/fetch';
 import { toast } from 'react-toastify';
 import { dateConstant } from '../app/constant';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,8 @@ const useCostReportHandler = () => {
   const fetchReports = (groupby = 'Service', filters = []) => {
     setIsLoading(true);
     const backendgroupby = groupby.toLowerCase().replace(' ', '_');
-    fetchApi.get(`/${role === 'ADMIN' || role === 'READ_ONLY' ? 'admin' : 'user'}/reports?group_by=${backendgroupby}${accounts.length === 0 ? '' : `&accountIds=${accounts.join(',')}`}${filters.length === 0 ? '' : `&filters=${filters.join(',')}`}${startDate ? `&start_date=${startDate}` : ''}${endDate ? `&end_date=${endDate}` : ''}`)
+    const accountIds = accounts.map(a=>a.accountId);
+    fetchApi.get(`/${role === 'ADMIN' || role === 'READ_ONLY' ? 'admin' : 'user'}/reports?group_by=${backendgroupby}${accounts.length === 0 ? '' : `&accountIds=${accountIds.join(',')}`}${filters.length === 0 ? '' : `&filters=${filters.join(',')}`}${startDate ? `&start_date=${startDate}` : ''}${endDate ? `&end_date=${endDate}` : ''}`)
       .then(response => {
         const { monthWise, groupWise } = response.data;
         transformGroupWiseData(groupby, groupWise, monthWise);
@@ -51,9 +52,9 @@ const useCostReportHandler = () => {
       const obj = {};
       obj.groupName = g.groupName;
       monthArray.forEach((m) => {
-        obj[m] = g.monthlyData[m] ? g.monthlyData[m] : 0;
+        obj[m] = '$'+(g.monthlyData[m] ? g.monthlyData[m] : 0);
       })
-      obj['total'] = g.totalCost;
+      obj['total'] = '$'+g.totalCost;
       transformedData.push(obj);
     })
     const lastobj = {};
@@ -63,7 +64,7 @@ const useCostReportHandler = () => {
       lastobj[mW] = monthWise[mW].totalCost;
       totalwhole += monthWise[mW].totalCost;
     }
-    lastobj['total'] = totalwhole;
+    lastobj['total'] = '$'+totalwhole;
     lastobj['isFooter'] = true;
     transformedData.push(lastobj);
     setHeaders(headers);

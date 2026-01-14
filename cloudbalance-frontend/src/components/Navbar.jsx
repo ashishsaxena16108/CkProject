@@ -8,13 +8,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../app/feature/authReducer'
 import MultipleAccountSelection from './MultipleAccountSelection'
 import { useLocation } from 'react-router-dom'
+import { loginApi } from '../axios/loginApi'
+import { toast } from 'react-toastify'
 const Navbar = ({ handleBtn }) => {
   const dispatch = useDispatch();
   const user = useSelector(state=>state.auth.user);
   const [isHover, setIsHover] = useState(false);
   const location = useLocation();
   const handleLogout = () => {
-    dispatch(logout());
+    loginApi.post('/auth/logout',{accessToken:localStorage.getItem("jwtToken"),email:user.email})
+    .then(()=>{
+       dispatch(logout());
+    })
+    .catch((er)=>{
+      toast.error(er.response.data.message);
+    })
+    
   }
   return (
     <div className='flex h-[75px] shadow-xl z-10 items-center justify-between w-full bg-white '>
@@ -47,7 +56,7 @@ const Navbar = ({ handleBtn }) => {
       </div>
         <div className={`flex flex-col fixed right-40 top-15 transition-all duration-200 ${isHover?'opacity-100':'opacity-0 hidden'}`}>
           <div className=' self-end w-0 border-b-20 border-b-gray-100 border-l-6 border-l-transparent border-r-6 border-r-transparent'></div>
-          <div className='bg-gray-100 p-2 w-80 h-40 shadow-lg  rounded-md rounded-tr-none'>{`Email : ${user.email}`}</div>
+          <div className='bg-gray-100 p-2 w-80 h-10 shadow-lg  rounded-md rounded-tr-none'>{`Email : ${user.email}`}</div>
         </div>
     </div>
   )

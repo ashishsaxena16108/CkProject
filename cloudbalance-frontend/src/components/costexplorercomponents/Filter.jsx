@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { CostExploreList } from '../../app/constant';
 import SectionLoader from './SectionLoader';
-import { fetchApi } from '../../axios/admin/fetch';
+import { fetchApi } from '../../axios/fetch';
 import { useSelector } from 'react-redux';
 
-const Filter = ({ item,open,index,setIndex,fetchReports }) => {
+const Filter = ({ item,open,index,setIndex,fetchReports,handleCostGroup }) => {
   const [filters, setFilters] = useState([]);
   const [checkedFilters,setCheckedFilters] = useState([]);
+  const [searchfilters,setSearchFilters] = useState([]);
   const [isLoading,setIsLoading] = useState(false);
   const {role} = useSelector(state=>state.auth.user);
   const {accounts} = useSelector(state=>state.accounts);
@@ -14,9 +15,10 @@ const Filter = ({ item,open,index,setIndex,fetchReports }) => {
     setIndex(open?-1:index);
     setIsLoading(true);
     const backendgroupby=item.toLowerCase().replace(' ','_');
-    fetchApi.get(`/${role==='ADMIN'||role==='READ_ONLY'?'admin':'user'}/filters?group_by=${backendgroupby}${accounts.length===0?'':`&accountIds=${accounts.join(',')}`}`)
+    fetchApi.get(`/${role==='ADMIN'||role==='READ_ONLY'?'admin':'user'}/filters?group_by=${backendgroupby}${accounts.length===0?'':`&accountIds=${accounts.map(a=>a.accountId).join(',')}`}`)
     .then(response=>{
        setFilters(response.data);
+       setSearchFilters(response.data);
     })
     .finally(()=>{
       setIsLoading(false);
@@ -25,6 +27,7 @@ const Filter = ({ item,open,index,setIndex,fetchReports }) => {
   const handleApply = ()=>{
      fetchReports(item,checkedFilters);
      setIndex(-1);
+     handleCostGroup(item);
      setCheckedFilters([]);
   }
   const handleChange = (value,checked)=>{
@@ -34,6 +37,13 @@ const Filter = ({ item,open,index,setIndex,fetchReports }) => {
      else{
        setCheckedFilters(checkedFilters.filter(item=>item!==value))
      }
+  }
+  const handleSearch = (e)=>{
+    if(e.target.value===''){
+      setSearchFilters(filters);
+      return;
+    }
+     setSearchFilters(searchfilters.filter(i=>i.includes(e.target.value)));
   }
   return (
     <div className={`${open ? 'shadow-lg border-2 rounded border-gray-100' : ''} p-2`}>
@@ -47,11 +57,11 @@ const Filter = ({ item,open,index,setIndex,fetchReports }) => {
       <div className='h-[0.25px] bg-gray-300'></div>
       {open && <div className='flex flex-col gap-2'>
         <div className='border-b border-gray-400'>
-          <input type="text" className='border border-gray-200 m-2 w-11/12 rounded p-2' placeholder='Search' />
+          <input type="text" className='border border-gray-200 m-2 w-11/12 rounded p-2' placeholder='Search' onChange={(e)=>handleSearch(e)}/>
         </div>
         { isLoading ? <SectionLoader height={'h-36'}/> :
         <div className='max-h-40 overflow-scroll mx-2'>
-          {filters.map((f)=>(
+          {searchfilters.map((f)=>(
              <div key={f} className='flex gap-3 py-1 items-center'>
               <input className='border rounded h-4 w-4 checked:bg-blue-800 checked:text-white peer-checked:opacity-100 ' checked={checkedFilters.includes(f)} onChange={(e)=>handleChange(f,e.target.checked)}  type="checkbox" name={f} id=""  />
                 <div>{f}</div>

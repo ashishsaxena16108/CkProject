@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { fetchApi } from '../axios/admin/fetch';
+import { fetchApi } from '../axios/fetch';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -19,7 +19,6 @@ export const useAccountHandler = () => {
        )
     const validateToContinue = ()=>{
         if(!validate(accountInputs,account)){
-            toast.error('Fill details to continue');
             return false;
         }
         return true;
@@ -27,7 +26,6 @@ export const useAccountHandler = () => {
     const handleSubmit = (e)=>{
         e.preventDefault();
         if(!validate(accountInputs,account)){
-            toast.error('Give all details correctly');
             return;
         }
         dispatch(showLoader());

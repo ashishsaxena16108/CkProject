@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { DummyUsers } from '../users'
-import { fetchApi } from '../axios/admin/fetch';
+import { fetchApi } from '../axios/fetch';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '../app/feature/loadReducer';
@@ -79,7 +79,6 @@ const useUserhandler = (initialUserData = { firstName: '', lastName: '', email: 
     e.preventDefault();
 
     if (!validate(addUserInputs, user)) {
-      toast.error('Give all details correctly');
       return;
     }
 

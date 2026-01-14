@@ -31,7 +31,10 @@ const CostBoard = () => {
     setCostGroup(item);
     fetchReports(item);
   }
-  
+  const handleGroupButtonWithoutFetch = (item)=>{
+    setCostGroups(costGroups=>[costGroup,...costGroups].filter((jtem)=>jtem!==item));
+    setCostGroup(item);
+  }
   return (
     <div className="w-[95%] content  m-3 border border-gray-300">
       <div className='flex bg-gray-100 relative border-b border-gray-200'>
@@ -72,7 +75,7 @@ const CostBoard = () => {
           </div>
         </div>
         
-        <FilterSection fetchReports={fetchReports} filterOpen={filterOpen}/>
+        <FilterSection fetchReports={fetchReports} filterOpen={filterOpen} handleCostGroup={handleGroupButtonWithoutFetch}/>
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ const ProtectedRoute = ({children,rolesNeeded}) => {
     return <Navigate to='/login' replace/>;
   }
   if(rolesNeeded && !rolesNeeded.includes(user.role)){
-      return <Navigate to={-1} state={{notaccesserror:true}} replace/>;
+      return <Navigate to={'/noaccess'} state={{notaccesserror:true}} replace/>;
   }
   return children;
 }
