@@ -4,8 +4,8 @@ import Form from '../components/Form';
 import { loginInputs } from '../app/constant.jsx';
 import useLogin from '../hooks/useLogin';
 import { useDispatch } from 'react-redux';
-import { logout } from '../app/feature/authReducer.js';
 import { hideLoader } from '../app/feature/loadReducer.js';
+import { logout } from '../app/feature/authReducer.js';
 
 const Login = () => {
   const {handleChange,handleLogin} = useLogin();

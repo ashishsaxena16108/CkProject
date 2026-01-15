@@ -4,8 +4,7 @@ import { toast } from "react-toastify";
 const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
 export const fetchApi = axios.create({
     baseURL:`${backendUrl}`,
-    timeout:3000,
-    withCredentials:true
+    timeout:3000
 })
 
 fetchApi.interceptors.request.use(async(config) => {
@@ -13,8 +12,12 @@ fetchApi.interceptors.request.use(async(config) => {
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+      return config;
     }
-    return config;
+    else{
+      window.location.replace('/login')
+    }
+    return Promise.reject(new axios.AxiosError('No auth token, redirecting to login'));
   },
   (error) => {
     console.log("the error is this",error)

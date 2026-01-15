@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isLogin:localStorage.getItem('isLogin') && localStorage.getItem('isLogin') === 'true',
+    isLogin:(localStorage.getItem('jwtToken')) && localStorage.getItem('isLogin') === 'true',
     user:localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
 };
 const authSlice = createSlice({

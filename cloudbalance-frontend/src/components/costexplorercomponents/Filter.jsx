@@ -43,7 +43,7 @@ const Filter = ({ item,open,index,setIndex,fetchReports,handleCostGroup }) => {
       setSearchFilters(filters);
       return;
     }
-     setSearchFilters(searchfilters.filter(i=>i.includes(e.target.value)));
+     setSearchFilters(searchfilters.filter(i=>i.toLowerCase().includes(e.target.value.toLowerCase())));
   }
   return (
     <div className={`${open ? 'shadow-lg border-2 rounded border-gray-100' : ''} p-2`}>

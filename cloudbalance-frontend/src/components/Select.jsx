@@ -7,6 +7,11 @@ const Select = ({options,onSelect,initialValue,name,values}) => {
   const dropdownRef = useRef(null);
 
   const displayLabel = selected ? selected : 'Select an option';
+   useEffect(() => {
+    const resetIfChange =()=>{const next = initialValue || null;
+    setSelected(prev => (prev !== next ? next : prev));}
+    resetIfChange();
+  }, [initialValue]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

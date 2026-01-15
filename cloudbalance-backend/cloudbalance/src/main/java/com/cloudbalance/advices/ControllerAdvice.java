@@ -7,6 +7,8 @@ import com.cloudbalance.records.ErrorResponseDTO;
 import com.cloudbalance.records.UserAuthDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.io.DeserializationException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -77,11 +79,19 @@ public class ControllerAdvice {
     }
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<ErrorResponseDTO> handleWrongJwtException(MalformedJwtException e){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Malformed Token"));
     }
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponseDTO> handleJwtExpiredException(ExpiredJwtException e){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("JWT Token is expired"));
+    }
+    @ExceptionHandler(DeserializationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleDeserializingException(DeserializationException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid Token"));
+    }
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponseDTO> handleSignatureException(SignatureException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid signature in Token"));
     }
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(AuthorizationDeniedException e) {
@@ -116,7 +126,16 @@ public class ControllerAdvice {
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDTO> handleHttpMessageError(HttpMessageNotReadableException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(e.getMessage()));
+        Throwable root = e;
+        while (root.getCause() != null) {
+            root = root.getCause();
+        }
+
+        String message = root.getMessage();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponseDTO(message));
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {

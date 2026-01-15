@@ -10,7 +10,7 @@ export const loginInputs = [
        if(!value)
          return "Field is required";
        if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value))
-          return "Not valid";
+          return "Not valid Email";
        return '';
      }
     },
@@ -24,13 +24,15 @@ export const loginInputs = [
      }
     }
 ]
-export const addUserInputs = [
+export const addUserInputs = (isEditing)=>[
     {for:"firstName",
      type:"text",
      placeholder:"Enter Your First Name",
      error:(value)=>{
         if(!value)
           return "Field is required";
+        if(String(value).length>30)
+          return "Field should be less than 30 characters"
         return '';
      }
     },
@@ -40,17 +42,22 @@ export const addUserInputs = [
      error:(value)=>{
         if(!value)
           return "Field is required";
+        if(String(value).length>30)
+          return "Field should be less than 30 characters"
         return '';
      }
     },
     {for:"email",
      type:"email",
      placeholder:"Enter Your Email Name",
+     disabled:isEditing,
      error:(value)=>{
        if(!value)
          return "Field is required";
+       if(String(value).length>30)
+          return "Field should be less than 30 characters"
        if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value))
-          return "Not valid";
+          return "Not valid Email";
        return '';
      }
     },
@@ -92,6 +99,8 @@ export const accountInputs = [
      error:(value)=>{
         if(!value)
           return "Field is required";
+        if(String(value).length>30)
+          return "Field should be less than 30 characters"
         return '';
      }
     }

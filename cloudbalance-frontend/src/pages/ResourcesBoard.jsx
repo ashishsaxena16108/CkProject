@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { resourcesListMap } from '../app/constant'
 import Table from '../components/Table'
-import MultipleAccountSelection from '../components/MultipleAccountSelection'
+import useResourceHandler from '../hooks/useResourceHandler'
+import SectionLoader from '../components/costexplorercomponents/SectionLoader';
 
 const ResourcesBoard = () => {
   const [resource, setResource] = useState(resourcesListMap.keys().next().value);
+  const {getResources,ec2,asg,rds,loading} = useResourceHandler();
+  useEffect(() => {
+    getResources();
+  }, [])
+  
   return (
     <div>
         <div className='flex gap-3 m-4 text-xl w-full'>
@@ -19,11 +25,13 @@ const ResourcesBoard = () => {
         <div>
             {resourcesListMap.keys().map((item)=>{
                 if(resource===item)
-                   return <div className="w-[95%] h-[85%] content bg-white m-3 rounded-xl p-4">
+                   return <div key={item} className="w-[95%] h-[85%] content bg-white m-3 rounded-xl p-4">
         <div className="btns p-3 flex">
           Resources
         </div>
-        <div className="table w-[98%]"><Table tableData={[]} headers={resourcesListMap.get(item)}/></div>
+        {loading?<SectionLoader height={'h-50'}/>:
+        <div className="table w-[98%]"><Table tableData={(resource==='EC2'?ec2:resource==='RDS'?rds:asg) || []} headers={resourcesListMap.get(item)}/></div>
+            }
       </div>
             })}
         </div>

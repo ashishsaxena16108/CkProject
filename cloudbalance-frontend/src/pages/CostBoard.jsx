@@ -22,7 +22,7 @@ const CostBoard = () => {
   const {accounts,startDate,endDate}=useSelector(state=>state.accounts);
   useEffect(() => {
     fetchReports(costGroup);
-  }, [accounts,startDate,endDate]);
+  }, [accounts,startDate,endDate,costGroup]);
   useEffect(()=>{
     console.log('Data Changed');
   },[chartData,tableData]);
@@ -31,7 +31,7 @@ const CostBoard = () => {
     setCostGroup(item);
     fetchReports(item);
   }
-  const handleGroupButtonWithoutFetch = (item)=>{
+  const handleGroupButtonWithoutFetch = (item='Service')=>{
     setCostGroups(costGroups=>[costGroup,...costGroups].filter((jtem)=>jtem!==item));
     setCostGroup(item);
   }

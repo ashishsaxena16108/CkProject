@@ -21,7 +21,6 @@ const useLogin = () => {
     const handleLogin = (e) => {
         e.preventDefault();
         if (!validate(loginInputs,cred)) {
-            toast.error('Give all details correctly');
             return;
         }
         dispatch(showLoader());

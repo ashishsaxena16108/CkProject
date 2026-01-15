@@ -1,6 +1,7 @@
 package com.cloudbalance.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -41,6 +42,14 @@ public class User  {
     }
 
     public enum Role{
-        ADMIN,USER,READ_ONLY
+        ADMIN,USER,READ_ONLY;
+        @JsonCreator
+        public static Role check(String value){
+            try {
+                return Role.valueOf(value);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid Role. Role can be [ADMIN, USER, READ_ONLY]");
+            }
+        }
     }
 }

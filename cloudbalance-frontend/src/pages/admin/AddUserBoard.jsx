@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom'
 const AddUserBoard = React.memo(() => {
     const location = useLocation();
     const editUser = location.state?.data;
+    const isEditing= !!editUser;
     const { user, handleChange, handleCancel, handleSubmit, fetchAccounts, accounts } = useUserhandler(editUser);
     useEffect(() => {
         if (user.role === 'USER')
@@ -16,7 +17,7 @@ const AddUserBoard = React.memo(() => {
     return (
         <div className='w-[95%] relative h-full content bg-white m-3 rounded-xl p-4 flex flex-col'>
             <div className='w-[60%] h-full text-md font-normal'>
-                <Form inputs={addUserInputs} values={user} handleChange={handleChange}>
+                <Form inputs={addUserInputs(isEditing)} values={user} handleChange={handleChange}>
 
                 </Form>
 

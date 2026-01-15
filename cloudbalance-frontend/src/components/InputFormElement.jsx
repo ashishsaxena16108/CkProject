@@ -28,7 +28,7 @@ const InputFormElement = ({ userData,handleChange,value}) => {
         {
           userData.type==='select'
           ? <Select className=' border-none p-3 focus:outline-none' id={userData.for} name={userData.for} options={userData.options} values={userData.values} initialValue={value ? value : userData.options[0]} onSelect={onChangeSelect}/>
-          : <input id={userData.for} name={userData.for} className=' appearance-none w-full border-none p-3 focus:outline-none' onChange={onChange} type={userData.type} placeholder={userData.placeholder} value={value}/>
+          : <input id={userData.for} name={userData.for} className=' appearance-none w-full border-none p-3 focus:outline-none' onChange={onChange} type={userData.type} placeholder={userData.placeholder} value={value} disabled={userData.disabled}/>
         }
       </div>
       <div className='text-red-600'>

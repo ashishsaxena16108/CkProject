@@ -36,8 +36,11 @@ const DateInput = ({start={day:1,month:'Jan',year:2025},end={day:1,month:'Jun',y
         e.stopPropagation();
     };
     const handleApply = ()=>{
-        dispatch(setdates({startDate:`${startDate.year}-${dateConstant.months.indexOf(startDate.month)+1}-${startDate.day}`,endDate:`${endDate.year}-${dateConstant.months.indexOf(endDate.month)+1}-${endDate.day}`}));
-    };
+        dispatch(setdates({
+  startDate: `${startDate.year}-${String(dateConstant.months.indexOf(startDate.month) + 1).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`,
+  endDate:   `${endDate.year}-${String(dateConstant.months.indexOf(endDate.month) + 1).padStart(2, '0')}-${String(endDate.day).padStart(2, '0')}`
+}));
+ };
     const handleReset = ()=>{
         dispatch(setdates({startDate:'',endDate:''}));
         setStartDate(start);

@@ -78,7 +78,7 @@ const useUserhandler = (initialUserData = { firstName: '', lastName: '', email: 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!validate(addUserInputs, user)) {
+    if (!validate(addUserInputs(true), user)) {
       return;
     }
 
@@ -99,11 +99,12 @@ const useUserhandler = (initialUserData = { firstName: '', lastName: '', email: 
       })
       .then(() => {
         toast.success('Successfully Added');
-        setUser({ ...initialUserData });
+        setUser(userRef.current);
         navigate('/admin/users');
       })
       .catch(error => {
         toast.error(error.response.data.message);
+        setUser(userRef.current);
       })
       .finally(() => {
         dispatch(hideLoader());

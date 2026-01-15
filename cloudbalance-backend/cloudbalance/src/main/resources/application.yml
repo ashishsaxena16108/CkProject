@@ -23,6 +23,15 @@ jwt:
   secret: ${JWT_SECRET}
   duration: 900000
 
+snowflake:
+   url: ${SNOWFLAKE_URL}
+   db: ${SNOWFLAKE_DB}
+   name: ${SNOWFLAKE_NAME}
+   role: ${SNOWFLAKE_ROLE}
+   password: ${SNOWFLAKE_PASSWORD}
+   warehouse: ${SNOWFLAKE_WAREHOUSE}
+   schema: ${SNOWFLAKE_SCHEMA}
+
 #logging:
 #   level:
 #     org.springframework.security: DEBUG

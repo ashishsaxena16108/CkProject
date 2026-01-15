@@ -15,7 +15,6 @@ import com.cloudbalance.repositories.UserRepository;
 import com.cloudbalance.utils.AwsUtil;
 import com.cloudbalance.utils.PredicateUtil;
 import com.cloudbalance.utils.SnowUtil;
-import com.snowflake.snowpark_java.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,10 +62,11 @@ public class AdminService {
                     .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userDTO.id()));
             newOrExistingUser.setLastName(userDTO.lastName());
             newOrExistingUser.setFirstName(userDTO.firstName());
-            if(Objects.equals(currentUser.getId(), userDTO.id()) && (!Objects.equals(currentUser.getEmail(), userDTO.email()) || currentUser.getRole().equals(userDTO.role()))){
-                throw new InvalidArgumentException("Admin cannot change its own role and email");
+            if(Objects.equals(currentUser.getId(), userDTO.id()) && !currentUser.getRole().equals(userDTO.role())){
+                throw new InvalidArgumentException("Admin cannot change own role.");
             }
-            newOrExistingUser.setEmail(userDTO.email());
+            if(!Objects.equals(newOrExistingUser.getEmail(), userDTO.email()))
+                throw new InvalidArgumentException("Cannot change email");
             newOrExistingUser.setRole(userDTO.role());
         }
         if(userDTO.accounts() != null){
